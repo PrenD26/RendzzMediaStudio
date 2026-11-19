@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rendzz Media Studio</title>
+<link rel="stylesheet" href="/lib/cropper.css">
+<link rel="stylesheet" href="/editor.css">
+<script src="/vendor/tailwind.js" onerror="var s=document.createElement('script');s.src='https://cdn.tailwindcss.com';document.head.appendChild(s)"></script>
+<style>body{margin:0}*{box-sizing:border-box}
+.wall{width:1280px;height:800px;background:#0f1115;font:14px "Segoe UI Variable","Segoe UI",system-ui,sans-serif;color:#f2f4f8}
+.win{width:1280px;height:800px;overflow:hidden;background:#14171c;display:flex;flex-direction:column}
+.tb{height:40px;background:#0f1115;display:flex;align-items:center;padding-left:16px;font-size:12px;color:#c3ccdc;gap:8px}
+.dot{width:12px;height:12px;border-radius:4px;background:#7b9bff}
+.wc{display:flex;margin-left:auto}.wc span{width:46px;height:40px;display:flex;align-items:center;justify-content:center;color:#e6ebf5;font-size:13px}
+.app{flex:1;display:flex;min-height:0}
+.side{width:208px;padding:8px 12px 16px;display:flex;flex-direction:column;gap:4px;color:#c3ccdc;background:#0f1115}
+.logo{color:#fff;font-weight:600;font-size:16px;padding:6px 10px 18px;line-height:1.25}
+.nav{position:relative;display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:8px;color:#c3ccdc;text-decoration:none}
+.nav.on{background:rgba(255,255,255,.1);color:#fff;font-weight:600}
+.nav.on::before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:3px;border-radius:2px;background:#7b9bff}
+.badge{margin-left:auto;font-size:11px;background:#7b9bff;color:#0a0d1c;border-radius:6px;padding:2px 7px;font-weight:600}
+.ok{margin-top:auto;font-size:12px;padding:10px;color:#7de8a0}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:#14171c;border-top-left-radius:12px;border-top:1px solid rgba(255,255,255,.1);border-left:1px solid rgba(255,255,255,.1)}
+.top{height:64px;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.top h2{font-size:15px;margin:0;font-weight:600;color:#fff}
+.sub{color:#a9b4c8;font-size:13px}
+.sp{flex:1}
+.body{flex:1;display:flex;min-height:0}
+.stage{flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.insp{width:316px;background:#101318;border-left:1px solid rgba(255,255,255,.08);padding:22px;display:flex;flex-direction:column;gap:18px}
+.btn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);border-radius:8px;padding:0 16px;height:44px;font:inherit;font-weight:600;color:#f2f4f8}
+.pri{background:#7b9bff;border-color:#7b9bff;color:#0a0d1c}
+.seg{display:flex;background:rgba(0,0,0,.3);border-radius:8px;padding:3px}
+.seg button{flex:1;height:36px;border:0;background:transparent;border-radius:6px;font:inherit;font-weight:600;color:#c3ccdc}
+.seg .on{background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.lbl{font-size:13px;font-weight:600;color:#a9b4c8;display:flex;justify-content:space-between;margin-bottom:8px}
+.lbl b{color:#fff}
+input[type=range]{width:100%;accent-color:#7b9bff;margin:0}
+.fld{width:100%;height:44px;border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:0 12px;font:inherit;background:rgba(0,0,0,.3);color:#fff}
+.bars{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;font-size:13px}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.28)}
+.bar.n{background:#7b9bff}
+.row{display:flex;justify-content:space-between;align-items:center}
+.save{color:#5ee08a;font-weight:700}
+.photo{flex:1;position:relative;border-radius:12px;overflow:hidden;min-height:0;border:1px solid rgba(255,255,255,.14)}
+.scene{position:absolute;inset:0;background:linear-gradient(#f2b48a 0%,#e98f7a 38%,#6d7fb8 100%)}
+.sun{position:absolute;left:62%;top:22%;width:90px;height:90px;border-radius:50%;background:#ffe3b8}
+.mt{position:absolute;inset:0;background:#1d2f4a;clip-path:polygon(0 100%,0 62%,16% 40%,30% 58%,48% 26%,66% 56%,82% 38%,100% 60%,100% 100%)}
+.mt2{position:absolute;inset:0;background:#2f4a73;clip-path:polygon(0 100%,0 80%,22% 64%,40% 78%,60% 60%,80% 76%,100% 66%,100% 100%)}
+.after{clip-path:inset(0 0 0 52%)}
+.cut{position:absolute;top:0;bottom:0;left:52%;width:2px;background:#fff}
+.knob{position:absolute;left:52%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);border:1px solid rgba(255,255,255,.6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.tag{position:absolute;top:14px;font-size:13px;font-weight:600;color:#fff;border-radius:8px;padding:6px 10px;backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5)}
+.queue{display:flex;gap:10px}
+.q{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px;display:flex;gap:10px;align-items:center;font-size:12px}
+.q.on{border:1px solid #7b9bff;background:rgba(123,155,255,.16)}
+.th{width:44px;height:44px;border-radius:6px;flex:none}
+.wave{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 14px 8px}
+.times{display:flex;justify-content:space-between;color:#a9b4c8;font-size:12px;padding-top:4px}
+.field{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 12px}
+.field small{display:block;color:#a9b4c8;font-size:12px}
+.field b{font-size:16px;color:#fff}
+.play{width:48px;height:48px;border-radius:50%;border:0;background:#7b9bff;color:#0a0d1c;font-size:16px}
+
+html,body{height:100%}body{background:#0f1115;overflow:hidden;font:14px "Segoe UI Variable","Segoe UI",system-ui,sans-serif;color:#f2f4f8}
+[hidden]{display:none!important}
+.app{width:100vw;height:100vh;display:flex;flex:none}
+.side{flex:none;background:#0f1115}
+.nav{border:0;background:transparent;width:100%;font:inherit;text-align:left;cursor:pointer}
+.nav:hover{background:rgba(255,255,255,.06)}.nav.on:hover{background:rgba(255,255,255,.1)}
+.pane{display:flex;flex-direction:column;flex:1;min-height:0}
+.main{overflow:hidden}.body{overflow:hidden}
+.stage{overflow-y:auto}.insp{overflow-y:auto;flex:none}
+.btn{cursor:pointer}.btn:hover{background:rgba(255,255,255,.15)}.pri:hover{background:#9bb4ff}.btn:disabled{opacity:.5;cursor:wait}
+.sm{height:34px;padding:0 12px}.btn.on{background:#7b9bff;border-color:#7b9bff;color:#0a0d1c}
+.dl{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.seg button{cursor:pointer}
+.drop{flex:1;min-height:260px;border:2px dashed rgba(255,255,255,.2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;text-align:center}
+.drop:hover{border-color:#7b9bff;background:rgba(123,155,255,.06)}
+.photo{flex:none;height:calc(100vh - 230px);min-height:300px;background:conic-gradient(#1b1e24 25%,#23272e 0 50%,#1b1e24 0 75%,#23272e 0) 0 0/20px 20px;cursor:ew-resize;user-select:none;touch-action:none}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.cropwrap{height:calc(100vh - 290px);min-height:260px;background:#0b0d10;border-radius:12px;overflow:hidden}
+.cropwrap img{display:block;max-width:100%}
+.item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px}
+.item .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.item a{color:#9bb4ff;font-weight:600}
+.busy{color:#9bb4ff;font-weight:600;font-size:13px}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#ff5d6c;color:#fff;padding:10px 16px;border-radius:10px;font-weight:600}
+canvas{display:block;width:100%;height:176px;touch-action:none;cursor:crosshair}
+.cropper-view-box,.cropper-face{border-radius:0}
+
+.aw{position:absolute;inset:0;background:conic-gradient(#1b1e24 25%,#23272e 0 50%,#1b1e24 0 75%,#23272e 0) 0 0/20px 20px}
+.side .seg button{font-size:12px;height:32px;padding:0}.bars .seg button{font-size:12px;padding:0}
+
+/* v3.4 - tata letak: pengaturan di atas (bisa digulir), hasil + tombol aksi selalu terlihat di bawah */
+.insp.split{padding:0;gap:0;overflow:hidden}
+.insp-b{flex:1;min-height:0;overflow-y:auto;padding:20px 22px;display:flex;flex-direction:column;gap:18px}
+.insp-f{flex:none;padding:14px 22px 18px;border-top:1px solid rgba(255,255,255,.08);background:#101318;display:flex;flex-direction:column;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 .btn{padding:0 8px}
+.top .btn{height:34px;padding:0 14px;font-size:13px}
+.bars.mini{padding:10px 12px;gap:6px}.bars.mini .bar{height:6px}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.insp .seg button{font-size:12px;padding:0 2px}
+.hint{font-size:12px;margin:0;color:#a9b4c8}
+.btn.dl[hidden]{display:none}
+.vwrap{position:relative;flex:none;height:calc(100vh - 410px);min-height:200px;background:#000;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
+.vwrap video{max-width:100%;max-height:100%;display:block}
+.verr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#cfd9ff;background:rgba(10,12,16,.85);font-size:13px}
+.tl{position:relative;height:48px;margin:12px 8px 4px;background:rgba(255,255,255,.07);border-radius:8px;touch-action:none;cursor:pointer;user-select:none}
+.tl-bg{position:absolute;inset:0;border-radius:8px;overflow:hidden}
+.tl-bg canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+.tl-sel{position:absolute;top:0;bottom:0;background:rgba(123,155,255,.10);border-top:2px solid #7b9bff;border-bottom:2px solid #7b9bff;box-shadow:0 0 0 9999px rgba(10,12,16,.62)}
+.tl-h{position:absolute;top:-5px;bottom:-5px;width:12px;margin-left:-6px;background:#fff;border-radius:4px;cursor:ew-resize}
+.tl-h::after{content:"";position:absolute;left:5px;top:14px;bottom:14px;width:2px;background:#8893a8}
+.tl-ph{position:absolute;top:-6px;bottom:-6px;width:2px;margin-left:-1px;background:#ffb020;pointer-events:none}
+.pbar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}.pbar>div{height:100%;background:#7b9bff;width:0;transition:width .3s}
+.btn.mini{height:30px;padding:0 10px;font-size:12px;white-space:nowrap}
+kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);border-radius:4px;padding:1px 5px}
+</style></head>
+<body>
+<div class="app">
+<nav class="side" id="nav">
+ <div class="logo">Rendzz<br>Media Studio</div>
+ <button class="nav on" data-tab="foto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 16l-5-5-9 9"/></svg>Foto</button>
+ <button class="nav" data-tab="video"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg>Video<span class="badge">Baru</span></button>
+ <button class="nav" data-tab="musik"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Musik</button>
+ <button class="nav" data-tab="batch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h14v14"/></svg>Batch</button>
+ <div class="ok">v3.5 · berjalan lokal</div>
+</nav>
+<div class="main">
+
+<!-- FOTO -->
+<section class="pane" id="tab-foto">
+ <div class="top"><div><h2 id="pTitle">Foto</h2><div class="sub" id="pInfo">Pilih foto untuk memulai</div></div><div class="sp"></div>
+  <span id="pBusy" class="busy" hidden>Memproses…</span>
+  <label class="btn dl" style="cursor:pointer">Ganti foto<input id="pFile2" type="file" accept="image/*" hidden></label></div>
+ <div class="body">
+  <div class="stage">
+   <label id="pDrop" class="drop"><b style="font-size:17px">Tarik foto ke sini atau klik untuk memilih</b><span class="sub">JPG, PNG, WebP, AVIF, GIF, TIFF</span><input id="pFile" type="file" accept="image/*" hidden></label>
+   <div id="pWork" hidden>
+    <div class="row" style="margin-bottom:12px;gap:12px;justify-content:flex-start">
+     <div class="seg" id="pMode" data-val="cmp" style="width:380px"><button data-v="cmp" class="on">Bandingkan</button><button data-v="crop">Crop</button><button data-v="edit">Hapus BG (Pro)</button></div>
+     <span class="sub" id="pCropInfo"></span></div>
+    <div id="cmpBox" class="photo">
+     <img id="bImg" alt="Sebelum"><div class="aw" id="aWrap" style="clip-path:inset(0 0 0 50%)"><img id="aImg" alt="Sesudah"></div>
+     <div class="cut" id="cBar" style="left:50%"></div><div class="knob" id="cKnob" style="left:50%">⇆</div>
+     <span class="tag" id="tagB" style="left:14px;background:rgba(0,0,0,.45)">Sebelum</span><span class="tag" id="tagA" style="right:14px;background:rgba(123,155,255,.92);color:#0a0d1c">Sesudah</span>
+    </div>
+    <div id="edBox" hidden></div>
+    <div id="cropBox" hidden>
+     <div class="cropwrap"><img id="cropImg" alt="Crop"></div>
+     <div class="row" style="margin-top:12px;gap:8px;justify-content:flex-start">
+      <span class="sub">Rasio</span>
+      <button class="btn sm ratio on" data-r="NaN">Bebas</button><button class="btn sm ratio" data-r="1">1:1</button><button class="btn sm ratio" data-r="1.3333">4:3</button><button class="btn sm ratio" data-r="1.7778">16:9</button><button class="btn sm ratio" data-r="0.8">4:5</button>
+      <div class="sp"></div><button id="cReset" class="btn sm">Hapus crop</button><button id="cApply" class="btn sm pri">Terapkan crop</button></div>
+    </div>
+   </div>
+  </div>
+  <aside class="insp" id="edInsp" hidden></aside>
+  <aside class="insp split" id="pInsp">
+   <div class="insp-b">
+    <div id="pPresetW"><div class="lbl">Preset</div><div class="seg" id="pPreset" data-val=""><button data-v="web">Web</button><button data-v="sosmed">Medsos</button><button data-v="kecil">Terkecil</button></div></div>
+    <div id="pCtl" style="display:contents"></div>
+    <p class="hint">Metadata (EXIF/GPS) dihapus otomatis. Semua proses berjalan di komputermu.</p>
+   </div>
+   <div class="insp-f">
+    <div class="bars mini"><div class="row"><span>Asli</span><b id="sO">-</b></div><div class="bar"></div>
+     <div class="row"><span>Hasil</span><b><span id="sN">-</span> <span class="save" id="sS"></span></b></div><div class="bar n" id="sBar" style="width:0"></div>
+     <div class="row"><span>Dimensi</span><b id="sD">-</b></div></div>
+    <a id="pDl" class="btn pri dl" style="opacity:.5;pointer-events:none">Unduh hasil</a>
+   </div>
+  </aside>
+ </div>
+</section>
+
+<!-- VIDEO -->
+<section class="pane" id="tab-video" hidden>
+ <div class="top"><div><h2 id="vName">Video</h2><div class="sub" id="vMeta">Pilih video untuk memulai</div></div><div class="sp"></div>
+  <label class="btn dl" style="cursor:pointer">Ganti video<input id="vFile2" type="file" accept="video/*,.mkv,.mov,.avi,.webm,.m4v,.ts,.3gp,.wmv,.flv" hidden></label></div>
+ <div class="body">
+  <div class="stage">
+   <label id="vDrop" class="drop"><b style="font-size:17px">Tarik video ke sini atau klik untuk memilih</b><span class="sub">MP4, MOV, MKV, WebM, AVI, dll. Potong bagian yang diinginkan lalu kompres.</span><input id="vFile" type="file" accept="video/*,.mkv,.mov,.avi,.webm,.m4v,.ts,.3gp,.wmv,.flv" hidden></label>
+   <div id="vWork" hidden>
+    <div class="vwrap"><video id="vid" playsinline preload="metadata"></video><div id="vErr" class="verr" hidden>Browser tidak bisa menampilkan pratinjau video ini (umumnya video HEVC/H.265 dari iPhone atau format langka). Video tetap bisa diproses: isi waktu Mulai dan Selesai secara manual (kosongkan Selesai untuk sampai akhir).</div></div>
+    <div class="tl" id="vTl"><div class="tl-bg"><canvas id="vTh"></canvas><div class="tl-sel" id="vSel"></div></div><div class="tl-h" id="vHs"></div><div class="tl-h" id="vHe"></div><div class="tl-ph" id="vPh"></div></div>
+    <div class="times" style="margin:0 8px 12px"><span>0:00.0</span><span id="vTotal"></span></div>
+    <div class="toolbar" style="margin-bottom:14px">
+     <button id="vPlay" class="btn pri">▶ Putar potongan</button>
+     <label class="row" style="gap:8px;justify-content:flex-start"><input id="vLoop" type="checkbox"> Ulangi</label>
+     <div class="sp"></div><button id="vAll" class="btn sm">Pilih semua</button></div>
+    <div class="row" style="gap:12px;align-items:stretch">
+     <div class="field"><small>Mulai (detik)</small><div class="row" style="gap:8px;margin-top:4px"><input id="vS" type="number" step="0.01" min="0" class="fld"><button id="vSetS" class="btn mini" title="Pakai posisi putar sekarang (I)">Di sini</button></div></div>
+     <div class="field"><small>Selesai (detik)</small><div class="row" style="gap:8px;margin-top:4px"><input id="vE" type="number" step="0.01" min="0" class="fld"><button id="vSetE" class="btn mini" title="Pakai posisi putar sekarang (O)">Di sini</button></div></div>
+     <div class="field" style="flex:none;min-width:120px"><small>Durasi potongan</small><b id="vDur" style="display:block;margin-top:12px">-</b></div></div>
+    <p class="hint" style="margin-top:8px">Seret gagang putih untuk memilih bagian. Klik garis waktu untuk pindah posisi. Pintasan: <kbd>Spasi</kbd> putar · <kbd>I</kbd> mulai · <kbd>O</kbd> selesai · <kbd>←</kbd><kbd>→</kbd> geser 1 frame.</p>
+    <div id="vOutBox" class="bars" style="margin-top:14px" hidden><b>Hasil terakhir <span id="vOutInfo" class="sub" style="font-weight:400"></span></b><video id="vOut" controls playsinline style="width:100%;max-height:300px;background:#000;border-radius:8px"></video></div>
+   </div>
+  </div>
+  <aside class="insp split">
+   <div class="insp-b">
+    <div class="bars"><label class="row" style="justify-content:flex-start;gap:10px;cursor:pointer"><input id="vCmp" type="checkbox" checked> <b>Kompres video</b></label>
+     <span id="vCmpN" class="sub" style="font-size:12px" hidden>Tanpa kompres: hanya dipotong, sangat cepat dan kualitas asli. Titik potong bergeser ke keyframe terdekat (bisa meleset sekitar 1-2 detik di awal).</span></div>
+    <div id="vPrecW" hidden><label class="row" style="justify-content:flex-start;gap:10px;cursor:pointer"><input id="vPrec" type="checkbox"> Potong presisi (kompres ulang kualitas tinggi)</label></div>
+    <div id="vCmpW" style="display:contents">
+     <div><div class="lbl">Preset</div>
+      <div class="seg" id="vPreset" data-val="seimbang"><button data-v="medsos">Medsos</button><button data-v="seimbang" class="on">Seimbang</button><button data-v="kecil">Terkecil</button></div></div>
+     <div><div class="lbl">Atur ukuran lewat</div>
+      <div class="seg" id="vMode" data-val="crf"><button data-v="crf" class="on">Kualitas</button><button data-v="size">Ukuran target</button></div></div>
+     <div id="vQw"><div class="lbl">Kualitas <b id="vQv">75</b></div><input id="vQ" type="range" min="10" max="100" value="75" aria-label="Kualitas"></div>
+     <div id="vTw" hidden><div class="lbl">Ukuran target (MB)</div><input id="vT" class="fld" type="number" min="1" step="1" value="25"><div class="sub" id="vTn" style="margin-top:6px;font-size:12px"></div></div>
+     <div><div class="lbl">Resolusi (sisi pendek)</div>
+      <div class="seg" id="vRes" data-val="1080"><button data-v="0">Asli</button><button data-v="1080" class="on">1080p</button><button data-v="720">720p</button><button data-v="480">480p</button><button data-v="360">360p</button></div></div>
+     <div><div class="lbl">Suara</div>
+      <div class="seg" id="vAud" data-val="normal"><button data-v="normal" class="on">Normal</button><button data-v="low">Hemat</button><button data-v="off">Tanpa suara</button></div></div>
+     <div id="vCodecW" hidden><div class="lbl">Codec</div>
+      <div class="seg" id="vCodec" data-val="h264"><button data-v="h264" class="on">H.264</button><button data-v="h265">H.265</button></div><div class="sub" style="margin-top:6px;font-size:12px">H.264 jalan di semua perangkat. H.265 sekitar 30% lebih kecil, tapi tidak semua pemutar/medsos mendukungnya.</div></div>
+     <div><div class="lbl">Kecepatan proses</div>
+      <div class="seg" id="vSpd" data-val="normal"><button data-v="fast">Cepat</button><button data-v="normal" class="on">Normal</button><button data-v="max">Hasil kecil</button></div></div>
+    </div>
+    <p class="hint">Hasil selalu berupa MP4. Video tidak diunggah ke mana pun, semua diproses di komputermu.</p>
+   </div>
+   <div class="insp-f">
+    <div class="bars mini"><div class="row"><span>Durasi hasil</span><b id="vsD">-</b></div><div class="row"><span>Asli (bagian ini)</span><b id="vsO">-</b></div>
+     <div class="row"><span>Hasil</span><b><span id="vsN">-</span> <span class="save" id="vsS"></span></b></div></div>
+    <div id="vProg" hidden><div class="row" style="margin-bottom:6px"><span class="busy" id="vProgT">Memproses…</span><button id="vCancel" class="btn mini">Batal</button></div><div class="pbar"><div id="vProgBar"></div></div></div>
+    <button id="vGo" class="btn pri" disabled>Proses video</button>
+    <a id="vDl" class="btn pri dl" hidden>Unduh hasil</a>
+   </div>
+  </aside>
+ </div>
+</section>
+
+<!-- MUSIK -->
+<section class="pane" id="tab-musik" hidden>
+ <div class="top"><div><h2 id="aName">Musik</h2><div class="sub" id="aMeta">Pilih file musik untuk memulai</div></div><div class="sp"></div>
+  <label class="btn dl" style="cursor:pointer">Ganti musik<input id="aFile2" type="file" accept="audio/*,video/mp4" hidden></label></div>
+ <div class="body">
+  <div class="stage">
+   <label id="aDrop" class="drop"><b style="font-size:17px">Tarik file musik ke sini atau klik untuk memilih</b><span class="sub">MP3, WAV, M4A, OGG, FLAC, dll.</span><input id="aFile" type="file" accept="audio/*,video/mp4" hidden></label>
+   <div id="aWork" hidden>
+    <div class="wave"><canvas id="wave"></canvas></div>
+    <p class="sub" style="font-size:12px;margin:8px 0 14px">Seret di waveform untuk memilih bagian. Geser garis putih untuk menyesuaikan. Klik untuk memindahkan posisi putar.</p>
+    <div class="row" style="gap:12px;justify-content:flex-start">
+     <button id="aPlay" class="btn pri">▶ Putar potongan</button>
+     <label class="row" style="gap:8px;justify-content:flex-start"><input id="aLoop" type="checkbox"> Ulangi</label>
+     <div class="sp"></div><button id="aAll" class="btn">Pilih semua</button></div>
+    <div class="row" style="gap:12px;margin-top:14px">
+     <div class="field"><small>Mulai (detik)</small><input id="aS" type="number" step="0.01" min="0" class="fld" style="margin-top:4px"></div>
+     <div class="field"><small>Selesai (detik)</small><input id="aE" type="number" step="0.01" min="0" class="fld" style="margin-top:4px"></div>
+     <div class="field"><small>Durasi potongan</small><b id="aDur" style="display:block;margin-top:12px"></b></div></div>
+    <audio id="aud" hidden></audio>
+    <div id="aOutBox" class="bars" style="margin-top:14px" hidden><b>Hasil <span id="aOutInfo" class="sub" style="font-weight:400"></span></b><audio id="aOut" controls style="width:100%"></audio></div>
+   </div>
+  </div>
+  <aside class="insp split">
+   <div class="insp-b">
+    <div><div class="lbl">Format</div><div class="seg" id="aFmt" data-val="mp3"><button data-v="mp3" class="on">MP3</button><button data-v="m4a">M4A</button><button data-v="ogg">OGG</button></div></div>
+    <div><div class="lbl">Ukuran target <b id="aPctV">50%</b></div><input id="aPct" type="range" min="10" max="100" value="50" aria-label="Ukuran target"><div class="sub" id="aBr" style="margin-top:6px;font-size:12px"></div></div>
+    <div><div class="lbl">Volume <b id="aVolV">1.00×</b></div><input id="aVol" type="range" min="0" max="3" step="0.05" value="1" aria-label="Volume"><div class="sub" style="margin-top:6px;font-size:12px">1 = asli. Di atas 1 lebih keras, di bawah 1 lebih pelan.</div></div>
+    <div class="row" style="gap:12px;align-items:flex-start"><div><div class="lbl">Fade in (dtk)</div><input id="aFi" type="number" min="0" step="0.5" value="0" class="fld"></div><div><div class="lbl">Fade out (dtk)</div><input id="aFo" type="number" min="0" step="0.5" value="0" class="fld"></div></div>
+    <label class="row" style="justify-content:flex-start;gap:10px"><input id="aMono" type="checkbox"> Jadikan mono</label>
+   </div>
+   <div class="insp-f">
+    <div class="bars mini"><div class="row"><span>Perkiraan hasil</span><b id="aEst">-</b></div></div>
+    <button id="aGo" class="btn pri" disabled>Proses musik</button><a id="aDl" class="btn dl" hidden>Unduh hasil</a>
+   </div>
+  </aside>
+ </div>
+</section>
+
+<!-- BATCH -->
+<section class="pane" id="tab-batch" hidden>
+ <div class="top"><div><h2>Batch foto</h2><div class="sub" id="bInfo">Satu pengaturan untuk banyak foto sekaligus</div></div><div class="sp"></div>
+  <label class="btn dl" style="cursor:pointer">Tambah foto<input id="bFile2" type="file" accept="image/*" multiple hidden></label></div>
+ <div class="body">
+  <div class="stage">
+   <label id="bDrop" class="drop"><b style="font-size:17px">Tarik banyak foto ke sini atau klik untuk memilih</b><span class="sub">Semua foto memakai kualitas, format, dan lebar yang sama</span><input id="bFile" type="file" accept="image/*" multiple hidden></label>
+   <div id="bList" style="display:flex;flex-direction:column;gap:8px" hidden></div>
+  </div>
+  <aside class="insp split">
+   <div class="insp-b"><div id="bCtl" style="display:contents"></div></div>
+   <div class="insp-f">
+    <div class="bars mini"><div class="row"><span>Total asli</span><b id="bO">-</b></div><div class="row"><span>Total hasil</span><b id="bN">-</b></div><div class="row"><span>Hemat</span><b class="save" id="bS">-</b></div></div>
+    <button id="bGo" class="btn pri" disabled>Proses semua</button>
+    <div class="grid2"><button id="bZip" class="btn" disabled>Unduh ZIP</button><button id="bClear" class="btn" disabled>Kosongkan</button></div>
+   </div>
+  </aside>
+ </div>
+</section>
+</div></div>
+<div id="toast" hidden></div>
+<script src="/lib/cropper.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const fmtSize=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
+const baseName=f=>f.name.replace(/\.[^.]+$/,'');
+const extOf=f=>({jpeg:'jpg'}[f]||f);
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,4500)}
+async function post(url,file){const r=await fetch(url,{method:'POST',body:file});if(!r.ok){let m='Gagal memproses';try{m=(await r.json()).error}catch{}throw new Error(m)}return r.blob()}
+function dz(drop,inputs,cb,multi){
+ ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.style.borderColor='#7b9bff'}));
+ ['dragleave','drop'].forEach(e=>drop.addEventListener(e,()=>drop.style.borderColor=''));
+ drop.addEventListener('drop',ev=>{ev.preventDefault();const fs=[...ev.dataTransfer.files];fs.length&&cb(multi?fs:fs[0])});
+ inputs.forEach(i=>i.addEventListener('change',()=>{const fs=[...i.files];fs.length&&cb(multi?fs:fs[0]);i.value=''}));
+}
+const seg=(id,opts,cur)=>`<div class="seg" id="${id}" data-val="${cur}">${opts.map(([v,l])=>`<button data-v="${v}" class="${v===cur?'on':''}">${l}</button>`).join('')}</div>`;
+const setSeg=(id,v)=>{const s=$('#'+id);s.dataset.val=v;[...s.children].forEach(b=>b.classList.toggle('on',b.dataset.v===v))};
+document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(!b)return;const s=b.parentElement;setSeg(s.id,b.dataset.v);s.dispatchEvent(new Event('segchange',{bubbles:true}))});
+const ctl=p=>`<div class="bars"><label class="row" style="justify-content:flex-start;gap:10px;cursor:pointer"><input id="${p}Cmp" type="checkbox" checked> <b>Kompres foto</b></label><span id="${p}CmpN" class="sub" style="font-size:12px" hidden>Tanpa kompresi: kualitas penuh (lossless), ukuran file bisa lebih besar dari aslinya.</span></div>
+<div id="${p}Qw"><div class="lbl">Kualitas <b id="${p}Qv">80</b></div><input id="${p}Q" type="range" min="1" max="100" value="80" aria-label="Kualitas"></div>
+<div><div class="lbl">Format</div>${seg(p+'Fmt',[['jpeg','JPG'],['webp','WebP'],['avif','AVIF'],['png','PNG']],'webp')}</div>
+<div><div class="lbl">Lebar maksimum (px)</div><input id="${p}W" class="fld" type="number" min="16" placeholder="Ukuran asli"></div>
+<div class="bars"><label class="row" style="justify-content:flex-start;gap:10px;cursor:pointer"><input id="${p}Rm" type="checkbox"> <b>Hapus background otomatis</b></label>
+<div id="${p}RmO" hidden style="display:flex;flex-direction:column;gap:10px"><div class="lbl" style="margin:0">Latar hasil</div>${seg(p+'Bg',[['none','Transparan'],['white','Putih'],['custom','Warna']],'none')}<input id="${p}Col" type="color" value="#ffffff" hidden style="width:100%;height:40px;border:0;background:none"><span class="sub" style="font-size:12px">Model AI dimuat saat pertama dipakai, jadi proses awal lebih lama. JPG tidak mendukung transparan, latarnya otomatis putih.</span></div></div>`;
+$('#pCtl').innerHTML=ctl('p');$('#bCtl').innerHTML=ctl('b');
+document.addEventListener('input',e=>{if(e.target.matches('#pQ,#bQ'))$('#'+e.target.id+'v').textContent=e.target.value});
+const settings=p=>{const q=new URLSearchParams({q:$('#'+p+'Q').value,fmt:$('#'+p+'Fmt').dataset.val});if(!$('#'+p+'Cmp').checked)q.set('cmp','0');if($('#'+p+'W').value)q.set('w',$('#'+p+'W').value);if($('#'+p+'Rm').checked){q.set('rmbg',1);const b=$('#'+p+'Bg').dataset.val;if(b==='white')q.set('bg','#ffffff');else if(b==='custom')q.set('bg',$('#'+p+'Col').value)}return q};
+
+// Navigasi
+$$('#nav .nav').forEach(b=>b.onclick=()=>{
+ $$('#nav .nav').forEach(x=>x.classList.toggle('on',x===b));
+ ['foto','video','musik','batch'].forEach(t=>$('#tab-'+t).hidden=t!==b.dataset.tab);
+ if(b.dataset.tab!=='musik')au.pause();else draw();
+ if(b.dataset.tab!=='video')vd.pause();
+});
+
+/* ===== FOTO ===== */
+const P={cut:null,file:null,img:null,url:null,crop:null,cropper:null,seq:0,timer:null,aURL:null,bURL:null};
+dz($('#pDrop'),[$('#pFile'),$('#pFile2')],loadPhoto);
+function loadPhoto(f){
+ if(!f.type.startsWith('image/'))return toast('File harus berupa gambar.');
+ P.file=f;if(P.url)URL.revokeObjectURL(P.url);P.url=URL.createObjectURL(f);P.crop=null;window.edReset&&edReset();
+ const im=new Image();
+ im.onload=()=>{P.img=im;$('#pDrop').hidden=true;$('#pWork').hidden=false;$('#pTitle').textContent=f.name;
+  $('#pInfo').textContent=`${im.naturalWidth}×${im.naturalHeight} px · ${fmtSize(f.size)}`;setMode('cmp');queue(0)};
+ im.onerror=()=>toast('Format gambar ini tidak bisa dibaca browser.');im.src=P.url;
+}
+function setMode(m){
+ const crop=m==='crop',edit=m==='edit';$('#cmpBox').hidden=crop||edit;$('#cropBox').hidden=!crop;$('#edBox').hidden=!edit;$('#pInsp').hidden=edit;$('#edInsp').hidden=!edit;setSeg('pMode',m);
+ if(P.cropper){P.cropper.destroy();P.cropper=null}
+ if(crop){const el=$('#cropImg');el.src=P.url;
+  P.cropper=new Cropper(el,{viewMode:1,autoCropArea:1,background:false,ready(){if(P.crop)P.cropper.setData(P.crop)}});
+  $$('.ratio').forEach(b=>b.classList.toggle('on',b.dataset.r==='NaN'))}
+ if(edit)window.edEnter&&edEnter();else window.edLeave&&edLeave();
+ $('#pCropInfo').textContent=P.crop?`Crop aktif: ${P.crop.width}×${P.crop.height} px`:'';
+}
+$('#pMode').addEventListener('segchange',()=>setMode($('#pMode').dataset.val));
+$$('.ratio').forEach(b=>b.onclick=()=>{$$('.ratio').forEach(x=>x.classList.remove('on'));b.classList.add('on');P.cropper&&P.cropper.setAspectRatio(+b.dataset.r)});
+$('#cApply').onclick=()=>{const d=P.cropper.getData(true),W=P.img.naturalWidth,H=P.img.naturalHeight,x=Math.max(0,d.x),y=Math.max(0,d.y);
+ P.crop={x,y,width:Math.min(d.width,W-x),height:Math.min(d.height,H-y)};window.edReset&&edReset();setMode('cmp');queue(0)};
+$('#cReset').onclick=()=>{P.crop=null;window.edReset&&edReset();setMode('cmp');queue(0)};
+const cmp=$('#cmpBox');let cmpDrag=false;
+function setCmp(ev){const r=cmp.getBoundingClientRect(),p=Math.min(100,Math.max(0,(ev.clientX-r.left)/r.width*100));
+ $('#aWrap').style.clipPath=`inset(0 0 0 ${p}%)`;$('#cBar').style.left=$('#cKnob').style.left=p+'%'}
+cmp.onpointerdown=e=>{cmpDrag=true;cmp.setPointerCapture(e.pointerId);setCmp(e)};
+cmp.onpointermove=e=>cmpDrag&&setCmp(e);cmp.onpointerup=()=>cmpDrag=false;
+const PRESETS={web:['webp',80,1920],sosmed:['jpeg',75,1080],kecil:['webp',50,1280]};
+$('#pPreset').addEventListener('segchange',()=>{const [f,q,w]=PRESETS[$('#pPreset').dataset.val];setSeg('pFmt',f);$('#pQ').value=q;$('#pQv').textContent=q;$('#pW').value=w});
+function queue(ms=350){clearTimeout(P.timer);P.timer=setTimeout(runPhoto,ms)}
+$('#pInsp').addEventListener('input',()=>{setSeg('pPreset','');queue()});
+$('#pInsp').addEventListener('segchange',e=>{if(e.target.id!=='pPreset')setSeg('pPreset','');queue()});
+$('#pPreset').addEventListener('segchange',()=>queue());
+async function runPhoto(){
+ if(!P.file)return;const id=++P.seq;$('#pBusy').textContent=$('#pRm').checked?'Menghapus background…':'Memproses…';$('#pBusy').hidden=false;
+ try{
+  let bURL=P.url;
+  if(P.crop){const c=document.createElement('canvas'),k=P.crop;c.width=k.width;c.height=k.height;
+   c.getContext('2d').drawImage(P.img,k.x,k.y,k.width,k.height,0,0,k.width,k.height);
+   bURL=URL.createObjectURL(await new Promise(r=>c.toBlob(r,'image/png')))}
+  const q=settings('p'),useCut=!!(P.cut&&$('#pRm').checked);if(useCut)q.delete('rmbg');
+  if(P.crop&&!useCut)Object.entries({cx:P.crop.x,cy:P.crop.y,cw:P.crop.width,ch:P.crop.height}).forEach(([k,v])=>q.set(k,v));
+  const blob=await post('/api/image?'+q,useCut?P.cut:P.file);if(id!==P.seq)return;
+  if(P.bURL)URL.revokeObjectURL(P.bURL);if(P.aURL)URL.revokeObjectURL(P.aURL);
+  P.bURL=bURL!==P.url?bURL:null;P.aURL=URL.createObjectURL(blob);
+  $('#bImg').src=bURL;$('#aImg').src=P.aURL;
+  const sv=(1-blob.size/P.file.size)*100;
+  $('#sO').textContent=fmtSize(P.file.size);$('#sN').textContent=fmtSize(blob.size);
+  $('#sS').textContent=(sv>=0?'-':'+')+Math.abs(sv).toFixed(0)+'%';$('#sS').style.color=sv>=0?'#5ee08a':'#ff7a85';
+  $('#sBar').style.width=Math.min(100,blob.size/P.file.size*100)+'%';
+  $('#tagB').textContent='Sebelum · '+(P.crop?'potongan':fmtSize(P.file.size));$('#tagA').textContent='Sesudah · '+fmtSize(blob.size);
+  const ti=new Image();ti.onload=()=>$('#sD').textContent=ti.naturalWidth+'×'+ti.naturalHeight;ti.src=P.aURL;
+  const dl=$('#pDl');dl.href=P.aURL;dl.download=`${baseName(P.file)}-rendzz.${extOf($('#pFmt').dataset.val)}`;dl.style.opacity=1;dl.style.pointerEvents='auto';
+ }catch(e){if(id===P.seq)toast(e.message)}
+ finally{if(id===P.seq)$('#pBusy').hidden=true}
+}
+
+/* ===== MUSIK ===== */
+const au=$('#aud'),cv=$('#wave'),cx=cv.getContext('2d');
+const A={file:null,buf:null,peaks:null,s:0,e:0,drag:null,anchor:0,down:0,moved:false,br:128,outURL:null};
+let gctx=null,gain=null;
+function ensureGain(){if(!gain){gctx=new (window.AudioContext||window.webkitAudioContext)();gain=gctx.createGain();gctx.createMediaElementSource(au).connect(gain);gain.connect(gctx.destination)}
+ gain.gain.value=+$('#aVol').value;if(gctx.state==='suspended')gctx.resume()}
+dz($('#aDrop'),[$('#aFile'),$('#aFile2')],loadAudio);
+async function loadAudio(f){
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const buf=await ctx.decodeAudioData(await f.arrayBuffer());ctx.close();
+  A.file=f;A.buf=buf;A.s=0;A.e=buf.duration;A.peaks=null;
+  if(au.src)URL.revokeObjectURL(au.src);au.src=URL.createObjectURL(f);
+  $('#aDrop').hidden=true;$('#aWork').hidden=false;$('#aOutBox').hidden=true;$('#aDl').hidden=true;$('#aDl').classList.remove('pri');$('#aGo').classList.add('pri');$('#aGo').textContent='Proses musik';
+  $('#aName').textContent=f.name;$('#aMeta').textContent=`${fmtTime(buf.duration)} · ${fmtSize(f.size)} · ${Math.round(f.size*8/buf.duration/1000)} kbps`;
+  $('#aGo').disabled=false;sync();
+ }catch(e){toast('File audio tidak bisa dibaca: '+e.message)}
+}
+function fmtTime(t){const m=Math.floor(t/60);return m+':'+(t%60).toFixed(1).padStart(4,'0')}
+function peaks(){
+ const W=Math.floor(cv.clientWidth),d=A.buf.getChannelData(0),spp=d.length/W,step=Math.max(1,Math.floor(spp/40)),p=[];let m=0.001;
+ for(let i=0;i<W;i++){let lo=0,hi=0;for(let j=Math.floor(i*spp),end=Math.floor((i+1)*spp);j<end;j+=step){const v=d[j];if(v<lo)lo=v;if(v>hi)hi=v}p.push([lo,hi]);m=Math.max(m,-lo,hi)}
+ A.peaks=p.map(([a,b])=>[a/m,b/m]);
+}
+function draw(){
+ if(!A.buf||$('#tab-musik').hidden||$('#aWork').hidden)return;
+ const W=cv.clientWidth,H=cv.clientHeight,dpr=devicePixelRatio||1;
+ if(cv.width!==Math.round(W*dpr)||!A.peaks){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);peaks()}
+ cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);
+ const d=A.buf.duration,sx=A.s/d*W,ex=A.e/d*W;
+ cx.fillStyle='rgba(123,155,255,.2)';cx.fillRect(sx,0,ex-sx,H);
+ A.peaks.forEach(([lo,hi],i)=>{cx.fillStyle=i>=sx&&i<=ex?'#9bb4ff':'#5b6b85';const y1=H/2+lo*H*.46,y2=H/2+hi*H*.46;cx.fillRect(i,y1,1,Math.max(1,y2-y1))});
+ cx.fillStyle='#fff';[sx,ex].forEach(x=>{cx.fillRect(x-1,0,2,H);cx.fillRect(x-5,H/2-14,10,28)});
+ cx.fillStyle='#ffb020';const px=au.currentTime/d*W;cx.fillRect(px-1,0,2,H);
+}
+function sync(){$('#aS').value=A.s.toFixed(2);$('#aE').value=A.e.toFixed(2);$('#aDur').textContent=fmtTime(A.e-A.s);est();draw()}
+function est(){
+ $('#aVolV').textContent=(+$('#aVol').value).toFixed(2)+'×';if(!A.buf)return;
+ const pct=+$('#aPct').value,orig=A.file.size*8/A.buf.duration/1000;
+ A.br=Math.max(24,Math.min(320,Math.round(orig*pct/100)));
+ $('#aPctV').textContent=pct+'%';$('#aBr').textContent=`Bitrate hasil ${A.br} kbps (asli ≈ ${Math.round(orig)}).`;
+ $('#aEst').textContent='≈ '+fmtSize(A.br*125*(A.e-A.s)/($('#aMono').checked?1.6:1));
+}
+const tx=ev=>Math.min(A.buf.duration,Math.max(0,(ev.clientX-cv.getBoundingClientRect().left)/cv.clientWidth*A.buf.duration));
+cv.onpointerdown=ev=>{if(!A.buf)return;cv.setPointerCapture(ev.pointerId);const t=tx(ev),near=9/cv.clientWidth*A.buf.duration;
+ if(Math.abs(t-A.s)<near)A.drag='s';else if(Math.abs(t-A.e)<near)A.drag='e';else{A.drag='n';A.anchor=t;A.down=ev.clientX;A.moved=false}};
+cv.onpointermove=ev=>{if(!A.buf)return;const t=tx(ev);
+ if(!A.drag){const near=9/cv.clientWidth*A.buf.duration;cv.style.cursor=(Math.abs(t-A.s)<near||Math.abs(t-A.e)<near)?'ew-resize':'crosshair';return}
+ if(A.drag==='s')A.s=Math.min(t,A.e-.05);else if(A.drag==='e')A.e=Math.max(t,A.s+.05);
+ else if(Math.abs(ev.clientX-A.down)>3){A.moved=true;A.s=Math.min(A.anchor,t);A.e=Math.max(A.anchor,t)}
+ sync()};
+cv.onpointerup=ev=>{if(A.drag==='n'&&!A.moved)au.currentTime=tx(ev);A.drag=null;sync()};
+function clampInputs(){const d=A.buf.duration;A.s=Math.max(0,Math.min(+$('#aS').value||0,d-.05));A.e=Math.min(d,Math.max(+$('#aE').value||d,A.s+.05));sync()}
+$('#aS').onchange=$('#aE').onchange=clampInputs;
+$('#aAll').onclick=()=>{A.s=0;A.e=A.buf.duration;sync()};
+$('#aPct').oninput=est;$('#aMono').onchange=est;
+$('#aVol').oninput=()=>{est();if(gain)gain.gain.value=+$('#aVol').value};
+function tick(){if(au.paused)return;if(au.currentTime>=A.e){if($('#aLoop').checked)au.currentTime=A.s;else{au.pause();au.currentTime=A.s}}draw();requestAnimationFrame(tick)}
+$('#aPlay').onclick=()=>{if(!au.paused)return au.pause();ensureGain();if(au.currentTime<A.s||au.currentTime>=A.e)au.currentTime=A.s;au.play();tick()};
+au.onplay=()=>$('#aPlay').textContent='❚❚ Jeda';au.onpause=()=>{$('#aPlay').textContent='▶ Putar potongan';draw()};
+au.onseeked=draw;addEventListener('resize',()=>{A.peaks=null;draw()});
+$('#aGo').onclick=async()=>{
+ const b=$('#aGo');b.disabled=true;b.textContent='Memproses…';au.pause();
+ try{
+  const dur=A.e-A.s,fmt=$('#aFmt').dataset.val,q=new URLSearchParams({start:A.s.toFixed(3),dur:dur.toFixed(3),br:A.br,fmt,vol:$('#aVol').value,fi:$('#aFi').value||0,fo:$('#aFo').value||0,mono:$('#aMono').checked?1:0});
+  const blob=await post('/api/audio?'+q,A.file);
+  if(A.outURL)URL.revokeObjectURL(A.outURL);A.outURL=URL.createObjectURL(blob);
+  $('#aOut').src=A.outURL;$('#aOutBox').hidden=false;
+  $('#aOutInfo').textContent=`· ${fmtSize(blob.size)} (${A.br} kbps, ${fmtTime(dur)}, volume ${(+$('#aVol').value).toFixed(2)}×)`;
+  const dl=$('#aDl');dl.href=A.outURL;dl.download=`${baseName(A.file)}-rendzz.${fmt}`;dl.hidden=false;dl.classList.add('pri');b.classList.remove('pri');
+ }catch(e){toast(e.message)}
+ b.disabled=false;b.textContent=$('#aDl').hidden?'Proses musik':'Proses ulang';
+};
+
+/* ===== VIDEO ===== */
+const vd=$('#vid'),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const V={file:null,dur:0,s:0,e:0,ok:false,drag:null,url:null,outURL:null,job:null,ac:null,res:null};
+const VPRE={medsos:{res:'720',q:65,aud:'normal'},seimbang:{res:'1080',q:75,aud:'normal'},kecil:{res:'480',q:45,aud:'low'}};
+const vCrf=()=>Math.round(18+(100-(+$('#vQ').value))*0.30);
+fetch('/api/caps').then(r=>r.json()).then(c=>{$('#vCodecW').hidden=!c.h265}).catch(()=>{});
+dz($('#vDrop'),[$('#vFile'),$('#vFile2')],loadVideo);
+function loadVideo(f){
+ if(!(f.type.startsWith('video/')||/\.(mkv|mov|avi|webm|mp4|m4v|ts|3gp|flv|wmv)$/i.test(f.name)))return toast('File harus berupa video.');
+ vCancelJob();vd.pause();thTok++;V.file=f;if(V.url)URL.revokeObjectURL(V.url);V.url=URL.createObjectURL(f);
+ V.dur=0;V.s=0;V.e=0;V.ok=false;V.res=null;
+ $('#vErr').hidden=true;vd.src=V.url;vd.load();
+ $('#vDrop').hidden=true;$('#vWork').hidden=false;$('#vOutBox').hidden=true;$('#vName').textContent=f.name;$('#vMeta').textContent=fmtSize(f.size)+' · membaca video…';
+ $('#vGo').disabled=false;$('#vGo').textContent='Proses video';vsync();
+}
+vd.onloadedmetadata=()=>{V.dur=isFinite(vd.duration)?vd.duration:0;V.s=0;V.e=V.dur;V.ok=V.dur>0;$('#vErr').hidden=true;
+ $('#vMeta').textContent=`${vd.videoWidth}×${vd.videoHeight} · ${fmtTime(V.dur)} · ${fmtSize(V.file.size)}`;vsync();vThumbs()};
+// Thumbnail garis waktu (v3.5): frame diambil di browser lewat video tersembunyi, tanpa beban ke server.
+let thTok=0,thTimer=0;
+async function vThumbs(){
+ const tok=++thTok,cv=$('#vTh'),box=$('#vTl');if(!V.ok||!V.url||box.hidden)return;
+ const dpr=Math.min(2,devicePixelRatio||1),W=Math.round(box.clientWidth*dpr),H=Math.round(box.clientHeight*dpr);if(!W||!H)return;
+ cv.width=W;cv.height=H;const c=cv.getContext('2d');c.fillStyle='#1b1e24';c.fillRect(0,0,W,H);
+ const tv=document.createElement('video');tv.muted=true;tv.preload='auto';tv.src=V.url;
+ try{
+  await new Promise((ok,bad)=>{tv.onloadeddata=ok;tv.onerror=()=>bad(new Error('x'));setTimeout(()=>bad(new Error('t')),8000)});
+  const ar=(tv.videoWidth||16)/(tv.videoHeight||9),n=Math.max(4,Math.min(24,Math.ceil(W/(H*ar)))),sw=W/n;
+  for(let i=0;i<n;i++){
+   if(tok!==thTok)return;
+   const t=Math.min(V.dur-.05,(i+.5)/n*V.dur);
+   await new Promise(r=>{const d=()=>{tv.removeEventListener('seeked',d);r()};tv.addEventListener('seeked',d);tv.currentTime=t;setTimeout(d,3000)});
+   if(tok!==thTok)return;
+   const vw=tv.videoWidth,vh=tv.videoHeight;if(!vw||!vh)continue;
+   const sc=Math.max(sw/vw,H/vh),dw=vw*sc,dh=vh*sc;
+   c.save();c.beginPath();c.rect(i*sw,0,sw,H);c.clip();c.drawImage(tv,i*sw+(sw-dw)/2,(H-dh)/2,dw,dh);c.restore();
+  }
+ }catch(e){}
+ tv.removeAttribute('src');tv.load();
+}
+addEventListener('resize',()=>{if($('#tab-video').hidden||!V.ok)return;clearTimeout(thTimer);thTimer=setTimeout(vThumbs,500)});
+vd.onerror=()=>{if(!V.file)return;V.ok=false;V.dur=0;$('#vErr').hidden=false;$('#vMeta').textContent=fmtSize(V.file.size)+' · pratinjau tidak tersedia';vsync()};
+function vLen(){return Math.max(0,(V.e||V.dur)-V.s)}
+function vsync(){
+ const d=V.dur;$('#vS').value=V.s.toFixed(2);$('#vE').value=V.e?V.e.toFixed(2):'';
+ $('#vDur').textContent=vLen()>0?fmtTime(vLen()):'-';$('#vTl').hidden=!d;$('#vTotal').parentElement.hidden=!d;
+ if(d){const sx=V.s/d*100,ex=V.e/d*100;$('#vSel').style.left=sx+'%';$('#vSel').style.width=(ex-sx)+'%';$('#vHs').style.left=sx+'%';$('#vHe').style.left=ex+'%';$('#vTotal').textContent=fmtTime(d)}
+ vph();vDirty();
+}
+function vph(){if(V.dur)$('#vPh').style.left=Math.min(100,vd.currentTime/V.dur*100)+'%'}
+const vx=ev=>{const r=$('#vTl').getBoundingClientRect();return Math.min(V.dur,Math.max(0,(ev.clientX-r.left)/r.width*V.dur))};
+$('#vTl').onpointerdown=ev=>{if(!V.dur)return;$('#vTl').setPointerCapture(ev.pointerId);const t=vx(ev),near=12/$('#vTl').clientWidth*V.dur,ds=Math.abs(t-V.s),de=Math.abs(t-V.e);
+ V.drag=Math.min(ds,de)<near?(ds<=de?'s':'e'):'seek';if(V.drag==='seek'){vd.currentTime=t;vph()}};
+$('#vTl').onpointermove=ev=>{if(!V.drag)return;const t=vx(ev);
+ if(V.drag==='s'){V.s=Math.min(t,V.e-.1);vd.currentTime=V.s}else if(V.drag==='e'){V.e=Math.max(t,V.s+.1);vd.currentTime=Math.max(0,V.e-.05)}else vd.currentTime=t;
+ vsync()};
+$('#vTl').onpointerup=$('#vTl').onpointercancel=()=>{V.drag=null};
+const vClamp=()=>{const d=V.dur;let s=Math.max(0,+$('#vS').value||0),e=+$('#vE').value||0;if(d){s=Math.min(s,d-.1);e=e?Math.min(d,e):d}if(e&&e<=s+.05)e=s+.1;V.s=s;V.e=e;vsync()};
+$('#vS').onchange=$('#vE').onchange=vClamp;
+$('#vAll').onclick=()=>{V.s=0;V.e=V.dur;vsync()};
+$('#vSetS').onclick=()=>{if(!V.ok)return;V.s=Math.min(vd.currentTime,(V.e||V.dur)-.1);vsync()};
+$('#vSetE').onclick=()=>{if(!V.ok)return;V.e=Math.max(vd.currentTime,V.s+.1);vsync()};
+function vtick(){if(vd.paused)return;const e=V.e||V.dur;if(vd.currentTime>=e){if($('#vLoop').checked)vd.currentTime=V.s;else{vd.pause();vd.currentTime=V.s}}vph();requestAnimationFrame(vtick)}
+$('#vPlay').onclick=()=>{if(!V.ok)return;if(!vd.paused)return vd.pause();if(vd.currentTime<V.s||vd.currentTime>=(V.e||V.dur)-.05)vd.currentTime=V.s;vd.play();vtick()};
+vd.onplay=()=>$('#vPlay').textContent='❚❚ Jeda';vd.onpause=()=>{$('#vPlay').textContent='▶ Putar potongan';vph()};
+vd.ontimeupdate=vph;
+document.addEventListener('keydown',e=>{
+ if($('#tab-video').hidden||!V.ok||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target,tag=t.tagName;
+ if(tag==='TEXTAREA'||(tag==='INPUT'&&t.type!=='range'&&t.type!=='checkbox'))return;
+ const k=e.key.toLowerCase();
+ if(e.code==='Space'){e.preventDefault();$('#vPlay').click()}
+ else if(k==='i')$('#vSetS').click();else if(k==='o')$('#vSetE').click();
+ else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();vd.pause();vd.currentTime=Math.min(V.dur,Math.max(0,vd.currentTime+(e.key==='ArrowRight'?1:-1)*(e.shiftKey?1:1/30)))}
+});
+document.addEventListener('keyup',e=>{if(e.code==='Space'&&!$('#tab-video').hidden&&V.ok&&!['INPUT','TEXTAREA'].includes(e.target.tagName))e.preventDefault()});
+// Pengaturan
+function vApplyUI(){
+ const cmp=$('#vCmp').checked,size=$('#vMode').dataset.val==='size';
+ $('#vCmpW').hidden=!cmp;$('#vCmpN').hidden=cmp;$('#vPrecW').hidden=cmp;$('#vQw').hidden=size;$('#vTw').hidden=!size;
+ if(size){const n=(+$('#vT').value||0),L=vLen()||0,abr={normal:128,low:64,off:0}[$('#vAud').dataset.val];
+  if(L>0&&n>0){const kb=Math.round(n*8388.608*.95/L-abr);$('#vTn').textContent=kb<30?'Terlalu kecil untuk durasi ini, naikkan ukuran target.':`Bitrate video ≈ ${kb} kbps`+(kb<200?' (rendah, gambar bisa buram)':'')}else $('#vTn').textContent=''}
+}
+function vDirty(){ // pengaturan/potongan berubah: hasil lama tidak lagi cocok
+ vApplyUI();$('#vDl').hidden=true;$('#vGo').classList.add('pri');
+ const L=vLen(),part=V.file&&V.dur&&L>0?V.file.size*L/V.dur:(V.file?V.file.size:0),size=$('#vMode').dataset.val==='size'&&$('#vCmp').checked;
+ $('#vsD').textContent=L>0?fmtTime(L):'-';$('#vsO').textContent=V.file?(V.dur?'≈ ':'')+fmtSize(part):'-';
+ $('#vsN').textContent=size&&+$('#vT').value>0?'≈ '+(+$('#vT').value)+' MB':'-';$('#vsS').textContent='';
+ V.res=null;
+}
+$('#vQ').addEventListener('input',()=>$('#vQv').textContent=$('#vQ').value);
+$('#vPreset').addEventListener('segchange',()=>{const p=VPRE[$('#vPreset').dataset.val];if(!p)return;setSeg('vRes',p.res);$('#vQ').value=p.q;$('#vQv').textContent=p.q;setSeg('vAud',p.aud);setSeg('vMode','crf');vDirty()});
+['#vCmp','#vPrec','#vT'].forEach(s=>$(s).addEventListener('input',vDirty));
+$('#vCmp').addEventListener('change',vDirty);
+$('#vQ').addEventListener('input',()=>{setSeg('vPreset','');vDirty()});
+['vMode','vRes','vAud','vCodec','vSpd'].forEach(id=>$('#'+id).addEventListener('segchange',()=>{if(id!=='vSpd'&&id!=='vCodec')setSeg('vPreset','');vDirty()}));
+function vParams(){
+ const q=new URLSearchParams({start:V.s.toFixed(3),dur:V.e?(V.e-V.s).toFixed(3):'0'});
+ if(!$('#vCmp').checked){q.set('cmp','0');if($('#vPrec').checked)q.set('prec','1');return q}
+ q.set('crf',vCrf());q.set('res',$('#vRes').dataset.val);q.set('aud',$('#vAud').dataset.val);q.set('codec',$('#vCodec').dataset.val);q.set('spd',$('#vSpd').dataset.val);
+ if($('#vMode').dataset.val==='size'){q.set('mode','size');q.set('mb',$('#vT').value||25)}
+ return q;
+}
+function vBusy(on,t){$('#vProg').hidden=!on;$('#vGo').hidden=on;if(on){$('#vProgT').textContent=t||'Memproses…';$('#vProgBar').style.width='0'}$('#vDl').hidden=on||$('#vDl').hidden}
+async function vCancelJob(){const id=V.job;V.job=null;if(V.ac){V.ac.abort();V.ac=null}if(id)fetch('/api/video/cancel?id='+id,{method:'POST'}).catch(()=>{});vBusy(false)}
+$('#vCancel').onclick=async()=>{await vCancelJob();toast('Proses dibatalkan.')};
+$('#vGo').onclick=async()=>{
+ if(!V.file||V.job||V.ac)return;
+ const fin=vLen()>0||!V.dur;if(!fin)return toast('Pilih bagian video yang valid dulu.');
+ if($('#vMode').dataset.val==='size'&&$('#vCmp').checked&&!(+$('#vT').value>0))return toast('Isi ukuran target (MB).');
+ vBusy(true,'Menyiapkan video…');const ac=V.ac=new AbortController();
+ try{
+  const r=await fetch('/api/video?'+vParams(),{method:'POST',body:V.file,signal:ac.signal}),j=await r.json();if(!r.ok)throw new Error(j.error||'Gagal memproses video');
+  const id=V.job=j.id;V.ac=null;
+  for(;;){
+   await sleep(600);if(V.job!==id)return;
+   const st=await(await fetch('/api/video/status?id='+id)).json();if(st.error)throw new Error(st.error);
+   if(st.state==='err')throw new Error(st.err||'Gagal memproses video');
+   $('#vProgBar').style.width=st.pct+'%';$('#vProgT').textContent=(st.note?'Kompres ulang… ':'Memproses… ')+st.pct+'%';
+   if(st.state==='done'){
+    const blob=await(await fetch('/api/video/file?id='+id)).blob();if(V.job!==id)return;V.job=null;
+    if(V.outURL)URL.revokeObjectURL(V.outURL);V.outURL=URL.createObjectURL(blob);
+    $('#vOut').src=V.outURL;$('#vOutBox').hidden=false;
+    const L=vLen(),part=V.dur&&L>0?V.file.size*L/V.dur:V.file.size,sv=(1-blob.size/part)*100;
+    $('#vsN').textContent=fmtSize(blob.size);$('#vsS').textContent=(sv>=0?'-':'+')+Math.abs(sv).toFixed(0)+'%';$('#vsS').style.color=sv>=0?'#5ee08a':'#ff7a85';
+    $('#vOutInfo').textContent='· '+fmtSize(blob.size)+(L>0?' · '+fmtTime(L):'');
+    const dl=$('#vDl');dl.href=V.outURL;dl.download=`${baseName(V.file)}-rendzz.mp4`;vBusy(false);dl.hidden=false;$('#vGo').classList.remove('pri');$('#vGo').textContent='Proses ulang';
+    if(st.note)toast2b(st.note);
+    return;
+   }
+  }
+ }catch(e){if(e.name!=='AbortError')toast(e.message);V.job=null;V.ac=null;vBusy(false)}
+};
+
+/* ===== BATCH ===== */
+const B={items:[],busy:false};
+dz($('#bDrop'),[$('#bFile'),$('#bFile2')],files=>{
+ files.filter(f=>f.type.startsWith('image/')).forEach(f=>B.items.push({file:f,state:'wait'}));renderBatch()},true);
+$('#bCtl').addEventListener('input',()=>{});
+function renderBatch(){
+ const has=B.items.length>0;$('#bDrop').hidden=has;$('#bList').hidden=!has;
+ $('#bGo').disabled=!has||B.busy;$('#bClear').disabled=!has||B.busy;
+ const done=B.items.filter(i=>i.blob);$('#bZip').disabled=!done.length||B.busy;
+ $('#bList').innerHTML=B.items.map((it,i)=>{
+  let st='<span class="sub">Menunggu</span>';
+  if(it.state==='run')st='<span class="busy">Memproses…</span>';
+  else if(it.state==='err')st=`<span style="color:#ff7a85">${it.err}</span>`;
+  else if(it.blob){const sv=(1-it.blob.size/it.file.size)*100;st=`<b>${fmtSize(it.blob.size)}</b> <span class="save">${sv>=0?'-':'+'}${Math.abs(sv).toFixed(0)}%</span> <a href="${it.url}" download="${it.out}">Unduh</a>`}
+  return `<div class="item"><span class="nm">${it.file.name.replace(/</g,'&lt;')}</span><span class="sub">${fmtSize(it.file.size)}</span><span style="min-width:190px;text-align:right">${st}</span></div>`}).join('');
+ const to=done.reduce((a,i)=>a+i.file.size,0),tn=done.reduce((a,i)=>a+i.blob.size,0);
+ $('#bInfo').textContent=has?`${B.items.length} foto · ${done.length} selesai`:'Satu pengaturan untuk banyak foto sekaligus';
+ $('#bO').textContent=done.length?fmtSize(to):'-';$('#bN').textContent=done.length?fmtSize(tn):'-';$('#bS').textContent=done.length?'-'+Math.max(0,(1-tn/to)*100).toFixed(0)+'%':'-';
+}
+$('#bGo').onclick=async()=>{
+ B.busy=true;const q=settings('b'),ext=extOf($('#bFmt').dataset.val),used={};
+ B.items.forEach(i=>{if(i.url)URL.revokeObjectURL(i.url);i.blob=i.url=null;i.state='wait'});renderBatch();
+ for(const it of B.items){
+  it.state='run';renderBatch();
+  try{it.blob=await post('/api/image?'+q,it.file);it.url=URL.createObjectURL(it.blob);
+   let n=baseName(it.file)+'-rendzz';used[n]=(used[n]||0)+1;if(used[n]>1)n+='-'+used[n];it.out=n+'.'+ext;it.state='ok'}
+  catch(e){it.state='err';it.err=e.message}
+  renderBatch();
+ }
+ B.busy=false;renderBatch();
+};
+$('#bClear').onclick=()=>{B.items.forEach(i=>i.url&&URL.revokeObjectURL(i.url));B.items=[];renderBatch()};
+$('#bZip').onclick=async()=>{
+ const b=$('#bZip');b.disabled=true;b.textContent='Menyusun ZIP…';
+ const z=await makeZip(B.items.filter(i=>i.blob).map(i=>({name:i.out,blob:i.blob})));
+ const a=document.createElement('a');a.href=URL.createObjectURL(z);a.download='Rendzz-batch.zip';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+ b.textContent='Unduh ZIP';b.disabled=false;
+};
+const CRC=new Uint32Array(256).map((_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;return c>>>0});
+const crc32=u=>{let c=-1;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return(c^-1)>>>0};
+async function makeZip(files){
+ const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+ for(const f of files){
+  const d=new Uint8Array(await f.blob.arrayBuffer()),n=enc.encode(f.name),c=crc32(d);
+  const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint32(14,c,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,n.length,true);
+  parts.push(h.buffer,n,d);
+  const g=new DataView(new ArrayBuffer(46));g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(8,0x0800,true);g.setUint32(16,c,true);g.setUint32(20,d.length,true);g.setUint32(24,d.length,true);g.setUint16(28,n.length,true);g.setUint32(42,off,true);
+  cen.push(g.buffer,n);off+=30+n.length+d.length;
+ }
+ const cs=cen.reduce((a,x)=>a+x.byteLength,0),e=new DataView(new ArrayBuffer(22));
+ e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+ return new Blob([...parts,...cen,e.buffer],{type:'application/zip'});
+}
+
+function applyCmp(p){const on=$('#'+p+'Cmp').checked;$('#'+p+'Qw').hidden=!on;$('#'+p+'CmpN').hidden=on;if(p==='p')$('#pPresetW').hidden=!on}
+['p','b'].forEach(p=>{let v=null;try{v=localStorage.getItem('rendzz.cmp')}catch{}if(v==='0')$('#'+p+'Cmp').checked=false;applyCmp(p)});
+document.addEventListener('change',e=>{const m=(e.target.id||'').match(/^([pb])Cmp$/);if(!m)return;
+ const on=e.target.checked;try{localStorage.setItem('rendzz.cmp',on?'1':'0')}catch{}
+ ['p','b'].forEach(x=>{$('#'+x+'Cmp').checked=on;applyCmp(x)});
+ if(B&&B.items&&B.items.length&&!B.busy)toast2b('Pengaturan kompresi berubah, klik "Proses semua" untuk menerapkan.')});
+function toast2b(m){const t=$('#toast');t.style.background='#2f7d4f';toast(m);setTimeout(()=>t.style.background='',4600)}
+document.addEventListener('change',e=>{const m=(e.target.id||'').match(/^([pb])Rm$/);if(m)$('#'+m[1]+'RmO').hidden=!e.target.checked});
+document.addEventListener('segchange',e=>{const m=(e.target.id||'').match(/^([pb])Bg$/);if(m)$('#'+m[1]+'Col').hidden=e.target.dataset.val!=='custom'});
+</script>
+<script src="/editor.js"></script></body></html>

@@ -1,0 +1,18 @@
+{
+  "name": "rendzz-media-studio",
+  "version": "3.5.0",
+  "description": "Rendzz Media Studio - kompres & edit foto, video, dan musik secara lokal",
+  "main": "start.js",
+  "engines": { "node": ">=18.17" },
+  "scripts": { "start": "node start.js" },
+  "dependencies": {
+    "cropperjs": "^1.6.2",
+    "sharp": "~0.33.5"
+  },
+  "overrides": { "sharp": "$sharp" },
+  "optionalDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@imgly/background-removal-node": "^1.4.5",
+    "ffmpeg-static": "^5.2.0"
+  }
+}

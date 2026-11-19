@@ -1,0 +1,15 @@
+# Dependensi & runtime yang diunduh otomatis oleh start.bat / start.sh
+node_modules/
+runtime/
+
+# File yang dibuat otomatis di tiap komputer
+diagnostik.txt
+.update-check
+.bgmodel-ready
+
+# Lain-lain
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

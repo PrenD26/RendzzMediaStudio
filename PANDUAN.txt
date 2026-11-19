@@ -1,0 +1,44 @@
+RENDZZ MEDIA STUDIO v3.5
+========================
+Cara pakai (PC mana pun, tanpa perlu pasang apa-apa dulu):
+  Windows      : klik dua kali start.bat
+  Linux / Mac  : jalankan ./start.sh
+
+Yang dilakukan otomatis:
+  - Node.js tidak ada / terlalu lama  -> diunduh versi portable ke folder "runtime" (tanpa admin, tidak mengubah sistem)
+  - Library dipasang lalu DIUJI betul-betul (sharp, ffmpeg, AI hapus background)
+  - Gagal? dicoba otomatis 4 cara: standar, bersih & ulang, paksa platform, server npm cadangan
+  - Semua gagal -> dibuat file diagnostik.txt (kirim file ini bila perlu bantuan)
+
+JANGAN jalankan manual: npm install sharp --arch=... --platform=...
+(flag itu sudah dihapus di npm baru dan tidak diperlukan lagi).
+
+Internet hanya dibutuhkan pada run pertama. Setelah itu aplikasi jalan offline.
+Jika hapus background AI tidak aktif di Windows: pasang Microsoft Visual C++ Redistributable
+https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+EDITOR HAPUS BACKGROUND (Foto > Hapus BG (Pro))
+  AI            : hapus otomatis (pilih Cepat / Akurat)
+  Pipet warna   : klik warna latar -> pratinjau langsung -> atur Toleransi & Kelembutan -> Terapkan
+                  Terhubung = seperti tongkat ajaib | Seluruh foto = semua warna serupa
+  Hapus/Pulihkan: kuas manual (ukuran, kekerasan, kekuatan) untuk merapikan sisa
+  Perapihan tepi: perkecil/perbesar tepi, haluskan tepi, bersihkan bintik
+  Tampilan      : Hasil / Overlay (area terhapus berwarna merah) / Asli, zoom scroll mouse, geser dengan Spasi
+  Pintasan      : A AI | I pipet | E hapus | R pulihkan | H geser | [ ] ukuran kuas | O overlay | 0 pas layar | Ctrl+Z / Ctrl+Y
+  Setelah selesai klik "Terapkan ke hasil", lalu atur format/kualitas dan Unduh.
+  Foto asli tidak pernah diubah; hasil akhir tetap beresolusi penuh.
+
+KOMPRESI FOTO (opsional)
+  Kotak "Kompres foto" di panel kanan (Foto & Batch). Pilihan diingat.
+  Aktif   : atur Preset / Kualitas / Format / Lebar seperti biasa.
+  Nonaktif: tanpa kompresi (lossless; JPG kualitas 100) - ukuran file bisa lebih besar. Format & lebar maksimum tetap bisa diatur.
+
+VIDEO (tab Video) - baru di v3.4; v3.5: garis waktu berisi thumbnail frame (area di luar potongan digelapkan)
+  Potong : seret gagang putih di garis waktu, atau isi Mulai/Selesai (detik). Tombol "Di sini" mengambil posisi putar sekarang.
+           Pintasan: Spasi putar | I titik mulai | O titik selesai | panah kiri/kanan geser 1 frame (Shift = 1 detik)
+  Kompres: kotak "Kompres video" (aktif secara bawaan). Pilih Preset (Medsos / Seimbang / Terkecil), atau atur sendiri:
+           Kualitas (slider) atau Ukuran target (MB, mis. 25 untuk batas kirim), Resolusi, Suara, Codec (H.264 / H.265), Kecepatan proses.
+  Tanpa kompres: video hanya dipotong, sangat cepat, kualitas asli. Titik potong bergeser ke keyframe terdekat;
+           centang "Potong presisi" bila ingin tepat per frame (video dikompres ulang dengan kualitas tinggi).
+  Hasil selalu MP4. Video besar aman (dialirkan ke disk, maks 8 GB). Progres tampil dan proses bisa dibatalkan.
+  Catatan: video HEVC/iPhone kadang tidak bisa dipratinjau browser; tetap bisa diproses dengan mengisi waktu manual.

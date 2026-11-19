@@ -1,0 +1,21 @@
+#edBox{display:flex;flex-direction:column;gap:12px}
+.ed-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ed-grp{display:flex;gap:6px;align-items:center}
+.ed-bar .btn.sm{display:inline-flex;align-items:center;gap:6px}
+.ed-view{position:relative;height:calc(100vh - 250px);min-height:300px;border-radius:12px;overflow:hidden;user-select:none;touch-action:none;background-color:#0b0d10;border:1px solid rgba(255,255,255,.08)}
+.bg-chk{background-image:conic-gradient(#2a2e36 25%,#3a3f49 0 50%,#2a2e36 0 75%,#3a3f49 0);background-size:20px 20px}
+#edWrap{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+#edCv{display:block;max-width:none}
+#edCur{position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);box-shadow:0 0 0 1px rgba(0,0,0,.6)}
+#edCur.er{border:2px solid #ff5d6c;background:rgba(255,93,108,.12)}
+#edCur.rs{border:2px solid #5ee08a;background:rgba(94,224,138,.12)}
+#edBusy{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,12,16,.65);color:#fff;font-weight:600;text-align:center;padding:20px;backdrop-filter:blur(2px)}
+.ed-hud{position:absolute;left:10px;bottom:8px;background:rgba(0,0,0,.6);color:#dfe6f5;font:12px ui-monospace,Consolas,monospace;padding:4px 8px;border-radius:6px;pointer-events:none}
+.sw{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.2);cursor:pointer;padding:0}
+.sw.on{border-color:#7b9bff}
+.sw-chk{background:conic-gradient(#555 25%,#999 0 50%,#555 0 75%,#999 0) 0 0/8px 8px}
+.ed-hint{background:rgba(123,155,255,.12);border:1px solid rgba(123,155,255,.35);color:#cfd9ff;border-radius:10px;padding:10px 12px;font-size:13px}
+.ed-panel{display:flex;flex-direction:column;gap:12px}
+.ed-sep{height:1px;background:rgba(255,255,255,.08)}
+#edInsp input[type=range]{width:100%}
+.ed-actions{position:sticky;bottom:-22px;margin:auto -22px -22px;padding:12px 22px 22px;background:#101318;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:8px}
