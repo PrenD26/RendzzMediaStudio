@@ -13,3 +13,8 @@ diagnostik.txt
 Thumbs.db
 .vscode/
 .idea/
+
+# Versi web (hasil build) dan berkas patch
+web/dist/
+web/node_modules/
+*.patch

@@ -1,0 +1,14 @@
+{
+  "name": "rendzz-media-studio-web",
+  "version": "3.7.0",
+  "private": true,
+  "type": "module",
+  "description": "Versi web/PWA Rendzz Media Studio (build statis untuk GitHub Pages)",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node serve.mjs"
+  },
+  "dependencies": {
+    "cropperjs": "^1.6.2"
+  }
+}

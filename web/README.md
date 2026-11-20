@@ -1,11 +1,10 @@
-# Versi web / PWA (Tahap 2)
+# Versi web / PWA
 
-Folder ini disiapkan untuk versi yang berjalan sepenuhnya di browser (Android, iPhone, PC) dan di-hosting di GitHub Pages.
+Berisi mesin pemrosesan browser dan skrip build. Tampilannya diambil dari `../ui`.
 
-Tampilannya memakai folder `../ui` yang sama dengan versi desktop. Yang dibuat di sini hanya mesin pemrosesnya
-(`engine-web.js`), dengan antarmuka yang sama seperti `ui/engine.js`. Lihat `../docs/ENGINE.md`.
+- `engine-web.js`: Engine web (foto: canvas). Saat build disalin sebagai `engine.js` menggantikan versi desktop.
+- `build.mjs`: membuat `dist/` (ui + engine web + cropperjs + manifest, ikon, service worker)
+- `serve.mjs`: server statis kecil untuk mencoba `dist/` di `http://localhost:8080`
+- `pwa/`: manifest dan ikon
 
-Rencana isi:
-- `engine-web.js`: foto (canvas + codec WebAssembly), musik dan video (ffmpeg.wasm / WebCodecs), hapus background (model di browser)
-- `manifest.webmanifest` dan `sw.js`: agar bisa dipasang dan jalan offline
-- skrip build yang menyalin `../ui` ke folder `dist/` bersama library (cropperjs) lalu dideploy lewat GitHub Actions
+Panduan lengkap (build, deploy GitHub Pages, memasang di HP): [../docs/WEB.md](../docs/WEB.md)

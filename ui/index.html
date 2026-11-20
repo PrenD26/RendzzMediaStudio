@@ -158,7 +158,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
  <button class="nav" data-tab="video"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg>Video<span class="badge">Baru</span></button>
  <button class="nav" data-tab="musik"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Musik</button>
  <button class="nav" data-tab="batch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h14v14"/></svg>Batch</button>
- <div class="ok">v3.6 · berjalan lokal</div>
+ <div class="ok">v3.7 · berjalan lokal</div>
 </nav>
 <div class="main">
 
@@ -194,7 +194,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
    <div class="insp-b">
     <div id="pPresetW"><div class="lbl">Preset</div><div class="seg" id="pPreset" data-val=""><button data-v="web">Web</button><button data-v="sosmed">Medsos</button><button data-v="kecil">Terkecil</button></div></div>
     <div id="pCtl" style="display:contents"></div>
-    <p class="hint">Metadata (EXIF/GPS) dihapus otomatis. Semua proses berjalan di komputermu.</p>
+    <p class="hint">Metadata (EXIF/GPS) dihapus otomatis. Semua proses berjalan di perangkatmu.</p>
    </div>
    <div class="insp-f">
     <div class="bars mini"><div class="row"><span>Asli</span><b id="sO">-</b></div><div class="bar"></div>
@@ -250,7 +250,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
      <div><div class="lbl">Kecepatan proses</div>
       <div class="seg" id="vSpd" data-val="normal"><button data-v="fast">Cepat</button><button data-v="normal" class="on">Normal</button><button data-v="max">Hasil kecil</button></div></div>
     </div>
-    <p class="hint">Hasil selalu berupa MP4. Video tidak diunggah ke mana pun, semua diproses di komputermu.</p>
+    <p class="hint">Hasil selalu berupa MP4. Video tidak diunggah ke mana pun, semua diproses di perangkatmu.</p>
    </div>
    <div class="insp-f">
     <div class="bars mini"><div class="row"><span>Durasi hasil</span><b id="vsD">-</b></div><div class="row"><span>Asli (bagian ini)</span><b id="vsO">-</b></div>
@@ -496,7 +496,18 @@ const vd=$('#vid'),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const V={file:null,dur:0,s:0,e:0,ok:false,drag:null,url:null,outURL:null,job:null,ac:null,res:null};
 const VPRE={medsos:{res:'720',q:65,aud:'normal'},seimbang:{res:'1080',q:75,aud:'normal'},kecil:{res:'480',q:45,aud:'low'}};
 const vCrf=()=>Math.round(18+(100-(+$('#vQ').value))*0.30);
-Engine.caps().then(c=>{$('#vCodecW').hidden=!c.h265});
+// Fitur yang tidak tersedia di engine aktif (mis. versi web) disembunyikan. Nilai yang tidak disebut dianggap tersedia.
+function applyCaps(c){
+ const off=k=>c[k]===false,hideTab=t=>{$('#nav [data-tab='+t+']').hidden=true};
+ $('#vCodecW').hidden=!c.h265;
+ $('.side .ok').textContent='v3.7 · '+(Engine.name==='web'?'jalan di browser':'berjalan lokal');
+ if(off('video'))hideTab('video');
+ if(off('audio'))hideTab('musik');
+ if(off('avif'))$$('#pFmt [data-v=avif],#bFmt [data-v=avif]').forEach(b=>b.remove());
+ if(off('webp')){$$('#pFmt [data-v=webp],#bFmt [data-v=webp]').forEach(b=>b.remove());PRESETS.web[0]=PRESETS.kecil[0]='jpeg';setSeg('pFmt','jpeg');setSeg('bFmt','jpeg')}
+ if(off('cutout')){$$('#pRm,#bRm').forEach(x=>x.closest('.bars').hidden=true);$('#pMode [data-v=edit]').remove();$('#pMode').style.width='260px'}
+}
+Engine.caps().then(applyCaps);
 dz($('#vDrop'),[$('#vFile'),$('#vFile2')],loadVideo);
 function loadVideo(f){
  if(!(f.type.startsWith('video/')||/\.(mkv|mov|avi|webm|mp4|m4v|ts|3gp|flv|wmv)$/i.test(f.name)))return toast('File harus berupa video.');

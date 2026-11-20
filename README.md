@@ -2,7 +2,7 @@
 
 Kompres dan edit **foto, video, dan musik** langsung di perangkatmu. Tidak ada file yang diunggah ke internet.
 
-**Versi saat ini: 3.6**
+**Versi saat ini: 3.7**
 
 ## Fitur
 
@@ -28,7 +28,7 @@ Detail dan pemecahan masalah: [desktop/PANDUAN.txt](desktop/PANDUAN.txt).
 ```
 ui/        tampilan bersama (index.html, editor.js, editor.css, engine.js)
 desktop/   server lokal + peluncur (sharp & ffmpeg untuk foto/video/musik)
-web/       versi browser/PWA untuk Android, iPhone, PC (dalam rencana)
+web/       versi browser/PWA untuk Android, iPhone, PC (foto sudah jalan; lihat docs/WEB.md)
 docs/      catatan proyek (antarmuka Engine, langkah GitHub)
 ```
 
@@ -39,12 +39,16 @@ Desktop memakai `ui/engine.js`; versi web nanti menyediakan `Engine` sendiri den
 
 1. ~~Naik ke GitHub~~
 2. ~~Pisah `ui/` `desktop/` `web/`, lapisan Engine, tampilan HP~~ (v3.6)
-3. Versi web/PWA (Foto, lalu Musik, Video, hapus background), hosting GitHub Pages
+3. Versi web/PWA di GitHub Pages: ~~Foto + Batch~~ (v3.7), lalu Musik, Video, AVIF, hapus background
 4. Putuskan distribusi PC: `Rendzz.bat` satu file atau `.exe`
 5. Fitur lanjutan: batch video, ekstrak audio, GIF
 
 Catatan teknis: `ui/vendor/tailwind.js` saat ini hanya dipakai untuk reset gaya dasar (tidak ada class utilitas Tailwind yang dipakai di tampilan).
 Di Tahap 3 sebaiknya diganti CSS hasil build agar versi web ringan dan bisa offline.
+
+## Versi web
+
+Versi yang jalan di browser (tanpa install, bisa dipasang di HP) ada di folder `web/`. Cara build dan deploy: [docs/WEB.md](docs/WEB.md).
 
 ## Lisensi
 

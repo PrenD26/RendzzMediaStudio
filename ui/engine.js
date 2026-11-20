@@ -11,7 +11,7 @@
   let job = null;
   window.Engine = {
     name: 'server',
-    async caps() { try { return await (await fetch('api/caps')).json(); } catch { return {}; } },
+    async caps() { try { const c = await (await fetch('api/caps')).json(); return { h265: !!c.h265 }; } catch { return {}; } },
     async image(file, q) { return (await post('api/image?' + q, file)).blob(); },
     async cutout(file, q) { return (await post('api/cutout?' + q, file)).blob(); },
     async audio(file, q) { return (await post('api/audio?' + q, file)).blob(); },

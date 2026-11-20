@@ -8,7 +8,7 @@ Desktop memakai `ui/engine.js` (bicara dengan server lokal). Versi web nanti mem
 | Method | Masukan | Hasil |
 | --- | --- | --- |
 | `Engine.name` | | `'server'` atau `'web'` |
-| `Engine.caps()` | | `Promise<{ video?: boolean, h265?: boolean }>` |
+| `Engine.caps()` | | `Promise<{ video?, audio?, cutout?, avif?, webp?, h265? : boolean }>`. Nilai `false` menyembunyikan fitur itu di tampilan; yang tidak disebut dianggap tersedia |
 | `Engine.image(file, q)` | foto, parameter kompres/ukuran/format | `Promise<Blob>` |
 | `Engine.cutout(file, q)` | foto, parameter hapus background | `Promise<Blob>` (PNG) |
 | `Engine.audio(file, q)` | audio, `start`, `dur`, `fmt`, `br`, `vol`, `fi`, `fo`, `mono` | `Promise<Blob>` |
