@@ -1,0 +1,687 @@
+diff --git a/LICENSE b/LICENSE
+new file mode 100644
+index 0000000..1c7cb8c
+--- /dev/null
++++ b/LICENSE
+@@ -0,0 +1,21 @@
++MIT License
++
++Copyright (c) 2026 PrenD26
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+diff --git a/README.md b/README.md
+index fb35e3b..467a973 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+ # Rendzz Media Studio
+ 
+-Kompres dan edit **foto, video, dan musik** langsung di komputermu. Tidak ada file yang diunggah ke internet.
++Kompres dan edit **foto, video, dan musik** langsung di perangkatmu. Tidak ada file yang diunggah ke internet.
+ 
+-**Versi saat ini: 3.5**
++**Versi saat ini: 3.6**
+ 
+ ## Fitur
+ 
+@@ -13,32 +13,40 @@ Kompres dan edit **foto, video, dan musik** langsung di komputermu. Tidak ada fi
+ | Musik | Potong, volume, fade in/out, mono, MP3/M4A/OGG dengan perkiraan ukuran |
+ | Batch | Satu pengaturan untuk banyak foto, unduh sebagai ZIP |
+ 
+-## Menjalankan
++Tampilan sudah responsif: di HP menu pindah ke bawah dan tombol aksi menempel di bawah layar.
++
++## Menjalankan versi desktop
+ 
+ - **Windows:** klik dua kali `start.bat`
+ - **Linux / Mac:** jalankan `./start.sh`
+ 
+ Node.js, library, dan model AI dipasang otomatis pada run pertama (butuh internet). Setelah itu aplikasi berjalan offline.
+-Detail dan pemecahan masalah ada di [PANDUAN.txt](PANDUAN.txt).
++Detail dan pemecahan masalah: [desktop/PANDUAN.txt](desktop/PANDUAN.txt).
+ 
+ ## Struktur
+ 
+ ```
+-server.js        server lokal (sharp untuk foto, ffmpeg untuk video & musik)
+-start.js         peluncur: cek Node, pasang library, uji, buka browser
+-public/          tampilan (index.html, editor.js, editor.css)
+-scripts/         pembantu untuk start.bat / start.sh
+-docs/            catatan proyek
++ui/        tampilan bersama (index.html, editor.js, editor.css, engine.js)
++desktop/   server lokal + peluncur (sharp & ffmpeg untuk foto/video/musik)
++web/       versi browser/PWA untuk Android, iPhone, PC (dalam rencana)
++docs/      catatan proyek (antarmuka Engine, langkah GitHub)
+ ```
+ 
++`ui/` tidak memanggil server secara langsung, hanya lewat objek `Engine` ([docs/ENGINE.md](docs/ENGINE.md)).
++Desktop memakai `ui/engine.js`; versi web nanti menyediakan `Engine` sendiri dengan antarmuka yang sama.
++
+ ## Roadmap
+ 
+-1. Naik ke GitHub (dokumen ini)
+-2. Versi web/PWA yang jalan di browser, termasuk Android (hosting: GitHub Pages)
+-3. Putuskan distribusi PC: `Rendzz.bat` satu file atau `.exe`
+-4. Fitur lanjutan: batch video, ekstrak audio, GIF
++1. ~~Naik ke GitHub~~
++2. ~~Pisah `ui/` `desktop/` `web/`, lapisan Engine, tampilan HP~~ (v3.6)
++3. Versi web/PWA (Foto, lalu Musik, Video, hapus background), hosting GitHub Pages
++4. Putuskan distribusi PC: `Rendzz.bat` satu file atau `.exe`
++5. Fitur lanjutan: batch video, ekstrak audio, GIF
++
++Catatan teknis: `ui/vendor/tailwind.js` saat ini hanya dipakai untuk reset gaya dasar (tidak ada class utilitas Tailwind yang dipakai di tampilan).
++Di Tahap 3 sebaiknya diganti CSS hasil build agar versi web ringan dan bisa offline.
+ 
+ ## Lisensi
+ 
+-Belum ditentukan. Tambahkan file `LICENSE` sebelum repositori dibuat publik.
+-Perlu dicek juga lisensi dependensi (mis. `ffmpeg-static`, `@imgly/background-removal-node`).
++[MIT](LICENSE). Dependensi memiliki lisensinya masing-masing (mis. `ffmpeg-static`, `sharp`, `@imgly/background-removal-node`);
++semuanya dipasang lewat npm saat run pertama dan tidak disalin ke repositori ini.
+diff --git a/PANDUAN.txt b/desktop/PANDUAN.txt
+similarity index 99%
+rename from PANDUAN.txt
+rename to desktop/PANDUAN.txt
+index bcb74de..1a81692 100644
+--- a/PANDUAN.txt
++++ b/desktop/PANDUAN.txt
+@@ -1,4 +1,4 @@
+-RENDZZ MEDIA STUDIO v3.5
++RENDZZ MEDIA STUDIO v3.6
+ ========================
+ Cara pakai (PC mana pun, tanpa perlu pasang apa-apa dulu):
+   Windows      : klik dua kali start.bat
+diff --git a/ffmpeg-path.js b/desktop/ffmpeg-path.js
+similarity index 100%
+rename from ffmpeg-path.js
+rename to desktop/ffmpeg-path.js
+diff --git a/package-lock.json b/desktop/package-lock.json
+similarity index 100%
+rename from package-lock.json
+rename to desktop/package-lock.json
+diff --git a/package.json b/desktop/package.json
+similarity index 95%
+rename from package.json
+rename to desktop/package.json
+index daf272b..9cc9927 100644
+--- a/package.json
++++ b/desktop/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "rendzz-media-studio",
+-  "version": "3.5.0",
++  "version": "3.6.0",
+   "description": "Rendzz Media Studio - kompres & edit foto, video, dan musik secara lokal",
+   "main": "start.js",
+   "engines": { "node": ">=18.17" },
+diff --git a/scripts/check.js b/desktop/scripts/check.js
+similarity index 100%
+rename from scripts/check.js
+rename to desktop/scripts/check.js
+diff --git a/scripts/checknode.js b/desktop/scripts/checknode.js
+similarity index 100%
+rename from scripts/checknode.js
+rename to desktop/scripts/checknode.js
+diff --git a/scripts/get-node.ps1 b/desktop/scripts/get-node.ps1
+similarity index 100%
+rename from scripts/get-node.ps1
+rename to desktop/scripts/get-node.ps1
+diff --git a/scripts/get-node.sh b/desktop/scripts/get-node.sh
+similarity index 100%
+rename from scripts/get-node.sh
+rename to desktop/scripts/get-node.sh
+diff --git a/server.js b/desktop/server.js
+similarity index 98%
+rename from server.js
+rename to desktop/server.js
+index 5e1373d..0993ffb 100644
+--- a/server.js
++++ b/desktop/server.js
+@@ -5,8 +5,8 @@ let sharp = null, sharpErr = '';
+ try { sharp = require('sharp'); } catch (e) { sharpErr = String(e.message).split('\n')[0]; }
+ const ffmpeg = require('./ffmpeg-path')();
+ process.chdir(__dirname);
+-const PORT = +process.env.PORT || 3737, PUB = path.join(__dirname, 'public');
+-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css' };
++const PORT = +process.env.PORT || 3737, PUB = path.join(__dirname, '..', 'ui');
++const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.wasm': 'application/wasm' };
+ const LIBS = { '/lib/cropper.js': 'cropperjs/dist/cropper.min.js', '/lib/cropper.css': 'cropperjs/dist/cropper.min.css' };
+ 
+ const body = (req, max = 600e6) => new Promise((res, rej) => {
+diff --git a/desktop/start.bat b/desktop/start.bat
+new file mode 100644
+index 0000000..d31797a
+--- /dev/null
++++ b/desktop/start.bat
+@@ -0,0 +1,47 @@
++@echo off
++setlocal EnableExtensions
++title Rendzz Media Studio
++cd /d "%~dp0"
++if not exist "package.json" goto :notextracted
++call :checknode
++if "%NODE_OK%"=="1" goto :run
++if exist "%~dp0runtime\node\node.exe" set "PATH=%~dp0runtime\node;%PATH%"
++call :checknode
++if "%NODE_OK%"=="1" goto :run
++echo [Rendzz] Node.js belum ada / versi terlalu lama (butuh 18.17 atau lebih baru).
++powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\get-node.ps1"
++if errorlevel 1 goto :nodefail
++set "PATH=%~dp0runtime\node;%PATH%"
++call :checknode
++if not "%NODE_OK%"=="1" goto :nodefail
++:run
++node start.js
++if errorlevel 1 goto :fail
++goto :end
++
++:checknode
++set "NODE_OK=0"
++where node >nul 2>nul
++if errorlevel 1 exit /b 0
++node scripts\checknode.js >nul 2>nul
++if not errorlevel 1 set "NODE_OK=1"
++exit /b 0
++
++:notextracted
++echo [Rendzz] File aplikasi tidak lengkap. Ekstrak SELURUH isi ZIP ke folder biasa
++echo          (bukan langsung dari dalam ZIP), lalu jalankan start.bat dari folder itu.
++goto :fail
++
++:nodefail
++echo.
++echo [Rendzz] Gagal menyiapkan Node.js otomatis (cek koneksi internet / antivirus).
++echo          Pasang manual Node.js LTS dari https://nodejs.org lalu jalankan start.bat lagi.
++
++:fail
++echo.
++echo [Rendzz] Aplikasi berhenti dengan error. Detail ada di diagnostik.txt (jika ada).
++pause
++exit /b 1
++
++:end
++pause
+diff --git a/start.js b/desktop/start.js
+similarity index 99%
+rename from start.js
+rename to desktop/start.js
+index ff80438..33bc4a7 100644
+--- a/start.js
++++ b/desktop/start.js
+@@ -127,7 +127,7 @@ function diagnose(st, npmv) {
+   if (st.ok && st.bg) warn('Fitur hapus background AI tidak aktif di PC ini (' + st.bg + ')' + (process.platform === 'win32' ? ' - biasanya teratasi dengan memasang Visual C++ Redistributable.' : '.'));
+ 
+   // Tailwind lokal agar tetap jalan offline; diperbarui tiap 7 hari.
+-  const tw = path.join(dir, 'public', 'vendor', 'tailwind.js');
++  const tw = path.join(dir, '..', 'ui', 'vendor', 'tailwind.js');
+   const stale = !fs.existsSync(tw) || Date.now() - fs.statSync(tw).mtimeMs > 7 * 864e5;
+   if (stale) try { log('Mengunduh Tailwind CSS...'); await download('https://cdn.tailwindcss.com/3.4.17', tw); } catch { log('Tailwind belum bisa diunduh' + (fs.existsSync(tw) ? ', memakai salinan lama.' : ' (akan dimuat dari CDN).')); }
+ 
+diff --git a/desktop/start.sh b/desktop/start.sh
+new file mode 100755
+index 0000000..8fa1bef
+--- /dev/null
++++ b/desktop/start.sh
+@@ -0,0 +1,15 @@
++#!/usr/bin/env bash
++# Rendzz Media Studio - launcher universal (Linux / macOS)
++cd "$(dirname "$0")" || exit 1
++ok() { command -v node >/dev/null 2>&1 && node scripts/checknode.js >/dev/null 2>&1; }
++fail() { echo; echo "[Rendzz] $1"; echo "[Rendzz] Alternatif: pasang Node.js LTS dari https://nodejs.org lalu jalankan ulang."; exit 1; }
++if ! ok; then
++  [ -x runtime/node/bin/node ] && export PATH="$PWD/runtime/node/bin:$PATH"
++fi
++if ! ok; then
++  echo "[Rendzz] Node.js belum ada / versi terlalu lama (butuh >= 18.17)."
++  bash scripts/get-node.sh || fail "Gagal menyiapkan Node.js (cek koneksi internet)."
++  export PATH="$PWD/runtime/node/bin:$PATH"
++  ok || fail "Node.js portable tidak bisa dijalankan di sistem ini."
++fi
++node start.js || { echo; echo "[Rendzz] Aplikasi berhenti dengan error. Lihat diagnostik.txt"; exit 1; }
+diff --git a/docs/ENGINE.md b/docs/ENGINE.md
+new file mode 100644
+index 0000000..3b39de0
+--- /dev/null
++++ b/docs/ENGINE.md
+@@ -0,0 +1,18 @@
++# Antarmuka Engine
++
++`ui/index.html` dan `ui/editor.js` tidak memanggil server secara langsung. Semua pemrosesan lewat objek global `Engine`.
++Desktop memakai `ui/engine.js` (bicara dengan server lokal). Versi web nanti memakai `web/engine-web.js` dengan antarmuka yang sama.
++
++`q` selalu berupa `URLSearchParams` (sama dengan query yang dipakai server).
++
++| Method | Masukan | Hasil |
++| --- | --- | --- |
++| `Engine.name` | | `'server'` atau `'web'` |
++| `Engine.caps()` | | `Promise<{ video?: boolean, h265?: boolean }>` |
++| `Engine.image(file, q)` | foto, parameter kompres/ukuran/format | `Promise<Blob>` |
++| `Engine.cutout(file, q)` | foto, parameter hapus background | `Promise<Blob>` (PNG) |
++| `Engine.audio(file, q)` | audio, `start`, `dur`, `fmt`, `br`, `vol`, `fi`, `fo`, `mono` | `Promise<Blob>` |
++| `Engine.video(file, q, { signal, onProgress })` | video; `start`, `dur`, `cmp`, `prec`, `crf`, `res`, `aud`, `codec`, `spd`, `mode`, `mb` | `Promise<{ blob: Blob, note?: string }>`; `onProgress(persen, catatan)` |
++| `Engine.cancelVideo()` | | membatalkan proses video yang berjalan |
++
++Kesalahan dilempar sebagai `Error` dengan pesan yang siap ditampilkan ke pengguna. Pembatalan melempar `AbortError`.
+diff --git a/docs/LANGKAH-GITHUB.md b/docs/LANGKAH-GITHUB.md
+index 0458b2f..e2df46d 100644
+--- a/docs/LANGKAH-GITHUB.md
++++ b/docs/LANGKAH-GITHUB.md
+@@ -5,9 +5,9 @@
+ 2. Nama: `rendzz-media-studio`. Pilih **Public** (atau Private). Jangan centang "Add a README" karena sudah ada.
+ 3. Klik **Create repository**.
+ 4. Di halaman repo klik **uploading an existing file**.
+-5. Ekstrak zip v3.5 di komputer, lalu **seret semua isi folder** (bukan folder induknya) ke kotak unggah.
++5. Ekstrak zip di komputer, lalu **seret semua isi folder** (bukan folder induknya) ke kotak unggah.
+    - Folder tersembunyi/berawalan titik (`.gitignore`, `.gitattributes`) kadang tidak ikut terseret. Kalau tidak muncul, tambahkan manual lewat **Add file > Create new file**, atau pakai cara B.
+-6. Tulis pesan: `Rendzz Media Studio v3.5`, lalu **Commit changes**.
++6. Tulis pesan: `Rendzz Media Studio v3.6`, lalu **Commit changes**.
+ 
+ ## B. Lewat Git (disarankan, semua file ikut dengan benar)
+ 1. Pasang Git: https://git-scm.com/downloads
+@@ -17,7 +17,7 @@
+ ```
+ git init
+ git add .
+-git commit -m "Rendzz Media Studio v3.5"
++git commit -m "Rendzz Media Studio v3.6"
+ git branch -M main
+ git remote add origin https://github.com/NAMAKAMU/rendzz-media-studio.git
+ git push -u origin main
+@@ -27,10 +27,10 @@ Ganti `NAMAKAMU` dengan username GitHub-mu. Saat diminta login, pakai akun GitHu
+ 
+ ## C. Menandai rilis
+ ```
+-git tag v3.5
+-git push origin v3.5
++git tag v3.6
++git push origin v3.6
+ ```
+-Lalu di GitHub: **Releases > Draft a new release**, pilih tag `v3.5`.
++Lalu di GitHub: **Releases > Draft a new release**, pilih tag `v3.6`.
+ 
+ ## D. Update berikutnya
+ Timpa file di folder dengan versi baru, lalu:
+diff --git a/start.bat b/start.bat
+index d31797a..6f84eab 100644
+--- a/start.bat
++++ b/start.bat
+@@ -1,47 +1,2 @@
+ @echo off
+-setlocal EnableExtensions
+-title Rendzz Media Studio
+-cd /d "%~dp0"
+-if not exist "package.json" goto :notextracted
+-call :checknode
+-if "%NODE_OK%"=="1" goto :run
+-if exist "%~dp0runtime\node\node.exe" set "PATH=%~dp0runtime\node;%PATH%"
+-call :checknode
+-if "%NODE_OK%"=="1" goto :run
+-echo [Rendzz] Node.js belum ada / versi terlalu lama (butuh 18.17 atau lebih baru).
+-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\get-node.ps1"
+-if errorlevel 1 goto :nodefail
+-set "PATH=%~dp0runtime\node;%PATH%"
+-call :checknode
+-if not "%NODE_OK%"=="1" goto :nodefail
+-:run
+-node start.js
+-if errorlevel 1 goto :fail
+-goto :end
+-
+-:checknode
+-set "NODE_OK=0"
+-where node >nul 2>nul
+-if errorlevel 1 exit /b 0
+-node scripts\checknode.js >nul 2>nul
+-if not errorlevel 1 set "NODE_OK=1"
+-exit /b 0
+-
+-:notextracted
+-echo [Rendzz] File aplikasi tidak lengkap. Ekstrak SELURUH isi ZIP ke folder biasa
+-echo          (bukan langsung dari dalam ZIP), lalu jalankan start.bat dari folder itu.
+-goto :fail
+-
+-:nodefail
+-echo.
+-echo [Rendzz] Gagal menyiapkan Node.js otomatis (cek koneksi internet / antivirus).
+-echo          Pasang manual Node.js LTS dari https://nodejs.org lalu jalankan start.bat lagi.
+-
+-:fail
+-echo.
+-echo [Rendzz] Aplikasi berhenti dengan error. Detail ada di diagnostik.txt (jika ada).
+-pause
+-exit /b 1
+-
+-:end
+-pause
++call "%~dp0desktop\start.bat"
+diff --git a/start.sh b/start.sh
+old mode 100644
+new mode 100755
+index 8fa1bef..6ea68c2
+--- a/start.sh
++++ b/start.sh
+@@ -1,15 +1,2 @@
+ #!/usr/bin/env bash
+-# Rendzz Media Studio - launcher universal (Linux / macOS)
+-cd "$(dirname "$0")" || exit 1
+-ok() { command -v node >/dev/null 2>&1 && node scripts/checknode.js >/dev/null 2>&1; }
+-fail() { echo; echo "[Rendzz] $1"; echo "[Rendzz] Alternatif: pasang Node.js LTS dari https://nodejs.org lalu jalankan ulang."; exit 1; }
+-if ! ok; then
+-  [ -x runtime/node/bin/node ] && export PATH="$PWD/runtime/node/bin:$PATH"
+-fi
+-if ! ok; then
+-  echo "[Rendzz] Node.js belum ada / versi terlalu lama (butuh >= 18.17)."
+-  bash scripts/get-node.sh || fail "Gagal menyiapkan Node.js (cek koneksi internet)."
+-  export PATH="$PWD/runtime/node/bin:$PATH"
+-  ok || fail "Node.js portable tidak bisa dijalankan di sistem ini."
+-fi
+-node start.js || { echo; echo "[Rendzz] Aplikasi berhenti dengan error. Lihat diagnostik.txt"; exit 1; }
++exec bash "$(cd "$(dirname "$0")" && pwd)/desktop/start.sh"
+diff --git a/public/editor.css b/ui/editor.css
+similarity index 100%
+rename from public/editor.css
+rename to ui/editor.css
+diff --git a/public/editor.js b/ui/editor.js
+similarity index 99%
+rename from public/editor.js
+rename to ui/editor.js
+index 47d92b4..47db03d 100644
+--- a/public/editor.js
++++ b/ui/editor.js
+@@ -243,7 +243,7 @@ async function runAI() {
+   try {
+     const q = new URLSearchParams({ model: $e('edModel').dataset.val }), k = P.crop;
+     if (k) Object.entries({ cx: k.x, cy: k.y, cw: k.width, ch: k.height }).forEach(([a, v]) => q.set(a, v));
+-    const blob = await post('/api/cutout?' + q, P.file), bmp = await createImageBitmap(blob);
++    const blob = await Engine.cutout(P.file, q), bmp = await createImageBitmap(blob);
+     const c = document.createElement('canvas'); c.width = ED.W; c.height = ED.H; const x = c.getContext('2d', { willReadFrequently: true }); x.imageSmoothingQuality = 'high'; x.drawImage(bmp, 0, 0, ED.W, ED.H);
+     const d = x.getImageData(0, 0, ED.W, ED.H).data, m = new Uint8Array(ED.W * ED.H); for (let i = 0; i < m.length; i++) m[i] = d[i * 4 + 3];
+     cancelPick(); pushUndo(); ED.mask = m; invalidate(); toast2('Selesai. Rapikan sisa latar dengan Pipet warna atau kuas.');
+diff --git a/ui/engine.js b/ui/engine.js
+new file mode 100644
+index 0000000..3bade66
+--- /dev/null
++++ b/ui/engine.js
+@@ -0,0 +1,32 @@
++/* Rendzz Media Studio - Engine "server" (versi desktop).
++ * Tampilan (index.html, editor.js) TIDAK memanggil server langsung, hanya lewat objek `Engine` ini.
++ * Versi web menyediakan `Engine` lain dengan antarmuka yang sama (lihat docs/ENGINE.md). */
++(() => {
++  const post = async (url, body, opt = {}) => {
++    const r = await fetch(url, { method: 'POST', body, ...opt });
++    if (!r.ok) { let m = 'Gagal memproses'; try { m = (await r.json()).error || m; } catch {} throw new Error(m); }
++    return r;
++  };
++  const sleep = ms => new Promise(r => setTimeout(r, ms));
++  let job = null;
++  window.Engine = {
++    name: 'server',
++    async caps() { try { return await (await fetch('api/caps')).json(); } catch { return {}; } },
++    async image(file, q) { return (await post('api/image?' + q, file)).blob(); },
++    async cutout(file, q) { return (await post('api/cutout?' + q, file)).blob(); },
++    async audio(file, q) { return (await post('api/audio?' + q, file)).blob(); },
++    async video(file, q, { signal, onProgress } = {}) {
++      const id = (await (await post('api/video?' + q, file, { signal })).json()).id; job = id;
++      for (;;) {
++        await sleep(600);
++        if (job !== id) throw new DOMException('Dibatalkan', 'AbortError');
++        const st = await (await fetch('api/video/status?id=' + id, { signal })).json();
++        if (st.error) throw new Error(st.error);
++        if (st.state === 'err') throw new Error(st.err || 'Gagal memproses video');
++        if (onProgress) onProgress(st.pct, st.note);
++        if (st.state === 'done') { const blob = await (await fetch('api/video/file?id=' + id, { signal })).blob(); job = null; return { blob, note: st.note }; }
++      }
++    },
++    cancelVideo() { const id = job; job = null; if (id) fetch('api/video/cancel?id=' + id, { method: 'POST' }).catch(() => {}); }
++  };
++})();
+diff --git a/public/index.html b/ui/index.html
+similarity index 92%
+rename from public/index.html
+rename to ui/index.html
+index 8875fa6..d3319d4 100644
+--- a/public/index.html
++++ b/ui/index.html
+@@ -1,9 +1,9 @@
+ <!DOCTYPE html>
+-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
++<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+ <title>Rendzz Media Studio</title>
+-<link rel="stylesheet" href="/lib/cropper.css">
+-<link rel="stylesheet" href="/editor.css">
+-<script src="/vendor/tailwind.js" onerror="var s=document.createElement('script');s.src='https://cdn.tailwindcss.com';document.head.appendChild(s)"></script>
++<link rel="stylesheet" href="lib/cropper.css">
++<link rel="stylesheet" href="editor.css">
++<script src="vendor/tailwind.js" onerror="var s=document.createElement('script');s.src='https://cdn.tailwindcss.com';document.head.appendChild(s)"></script>
+ <style>body{margin:0}*{box-sizing:border-box}
+ .wall{width:1280px;height:800px;background:#0f1115;font:14px "Segoe UI Variable","Segoe UI",system-ui,sans-serif;color:#f2f4f8}
+ .win{width:1280px;height:800px;overflow:hidden;background:#14171c;display:flex;flex-direction:column}
+@@ -115,6 +115,40 @@ canvas{display:block;width:100%;height:176px;touch-action:none;cursor:crosshair}
+ .pbar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}.pbar>div{height:100%;background:#7b9bff;width:0;transition:width .3s}
+ .btn.mini{height:30px;padding:0 10px;font-size:12px;white-space:nowrap}
+ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);border-radius:4px;padding:1px 5px}
++
++/* v3.6 - tampilan HP/tablet sempit: menu di bawah, konten satu kolom, tombol aksi menempel di bawah layar */
++@media (max-width:860px){
++ .app{width:100%;height:100vh;height:100dvh;flex-direction:column}
++ .main{order:1;border-radius:0;border-left:0;min-height:0}
++ .side{order:2;flex:none;width:auto;flex-direction:row;gap:2px;padding:4px 6px calc(4px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1)}
++ .side .logo,.side .ok{display:none}
++ .nav{flex:1;flex-direction:column;justify-content:center;gap:3px;padding:8px 2px;font-size:11px;text-align:center;min-width:0}
++ .nav.on::before{left:30%;right:30%;top:0;bottom:auto;width:auto;height:3px}
++ .badge{position:absolute;top:2px;right:8px;margin:0;padding:0 5px;font-size:9px}
++ .top{height:auto;min-height:56px;padding:8px 14px;gap:8px}
++ .top>div{min-width:0}
++ .top h2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
++ .pane .body{flex-direction:column;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
++ .stage{flex:none;overflow:visible;padding:14px}
++ .insp{display:block;width:auto;flex:none;overflow:visible;border-left:0;border-top:1px solid rgba(255,255,255,.08);padding:16px}
++ .insp.split{display:contents}
++ .insp-b{flex:none;overflow:visible;padding:16px;border-top:1px solid rgba(255,255,255,.08);background:#101318}
++ .insp-f{position:sticky;bottom:0;z-index:6;padding:10px 14px 12px;box-shadow:0 -10px 24px rgba(0,0,0,.45)}
++ .insp:not(.split)>*+*{margin-top:16px}
++ .ed-actions{bottom:0!important;margin-left:-16px!important;margin-right:-16px!important;margin-bottom:-16px!important;padding-left:16px!important;padding-right:16px!important}
++ .photo{height:48vh;min-height:240px}
++ .cropwrap{height:46vh;min-height:240px}
++ .ed-view{height:46vh;min-height:240px}
++ .vwrap{height:34vh;min-height:170px}
++ .drop{min-height:220px;padding:20px}
++ #pMode,#edViewMode{width:100%!important}
++ .fields{flex-wrap:wrap}.fields .field{flex:1 1 140px}
++ .desk{display:none}
++ .tl{height:56px}.tl-h{width:20px;margin-left:-10px}.tl-h::after{left:9px}
++ .bars.mini{padding:8px 12px;gap:4px}
++ .btn{min-height:42px}
++ .btn.mini,.top .btn{min-height:34px}
++}
+ </style></head>
+ <body>
+ <div class="app">
+@@ -124,7 +158,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
+  <button class="nav" data-tab="video"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg>Video<span class="badge">Baru</span></button>
+  <button class="nav" data-tab="musik"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Musik</button>
+  <button class="nav" data-tab="batch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h14v14"/></svg>Batch</button>
+- <div class="ok">v3.5 · berjalan lokal</div>
++ <div class="ok">v3.6 · berjalan lokal</div>
+ </nav>
+ <div class="main">
+ 
+@@ -187,11 +221,11 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
+      <button id="vPlay" class="btn pri">▶ Putar potongan</button>
+      <label class="row" style="gap:8px;justify-content:flex-start"><input id="vLoop" type="checkbox"> Ulangi</label>
+      <div class="sp"></div><button id="vAll" class="btn sm">Pilih semua</button></div>
+-    <div class="row" style="gap:12px;align-items:stretch">
++    <div class="row fields" style="gap:12px;align-items:stretch">
+      <div class="field"><small>Mulai (detik)</small><div class="row" style="gap:8px;margin-top:4px"><input id="vS" type="number" step="0.01" min="0" class="fld"><button id="vSetS" class="btn mini" title="Pakai posisi putar sekarang (I)">Di sini</button></div></div>
+      <div class="field"><small>Selesai (detik)</small><div class="row" style="gap:8px;margin-top:4px"><input id="vE" type="number" step="0.01" min="0" class="fld"><button id="vSetE" class="btn mini" title="Pakai posisi putar sekarang (O)">Di sini</button></div></div>
+      <div class="field" style="flex:none;min-width:120px"><small>Durasi potongan</small><b id="vDur" style="display:block;margin-top:12px">-</b></div></div>
+-    <p class="hint" style="margin-top:8px">Seret gagang putih untuk memilih bagian. Klik garis waktu untuk pindah posisi. Pintasan: <kbd>Spasi</kbd> putar · <kbd>I</kbd> mulai · <kbd>O</kbd> selesai · <kbd>←</kbd><kbd>→</kbd> geser 1 frame.</p>
++    <p class="hint" style="margin-top:8px">Seret gagang putih untuk memilih bagian. Klik garis waktu untuk pindah posisi.<span class="desk"> Pintasan: <kbd>Spasi</kbd> putar · <kbd>I</kbd> mulai · <kbd>O</kbd> selesai · <kbd>←</kbd><kbd>→</kbd> geser 1 frame.</span></p>
+     <div id="vOutBox" class="bars" style="margin-top:14px" hidden><b>Hasil terakhir <span id="vOutInfo" class="sub" style="font-weight:400"></span></b><video id="vOut" controls playsinline style="width:100%;max-height:300px;background:#000;border-radius:8px"></video></div>
+    </div>
+   </div>
+@@ -243,7 +277,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
+      <button id="aPlay" class="btn pri">▶ Putar potongan</button>
+      <label class="row" style="gap:8px;justify-content:flex-start"><input id="aLoop" type="checkbox"> Ulangi</label>
+      <div class="sp"></div><button id="aAll" class="btn">Pilih semua</button></div>
+-    <div class="row" style="gap:12px;margin-top:14px">
++    <div class="row fields" style="gap:12px;margin-top:14px">
+      <div class="field"><small>Mulai (detik)</small><input id="aS" type="number" step="0.01" min="0" class="fld" style="margin-top:4px"></div>
+      <div class="field"><small>Selesai (detik)</small><input id="aE" type="number" step="0.01" min="0" class="fld" style="margin-top:4px"></div>
+      <div class="field"><small>Durasi potongan</small><b id="aDur" style="display:block;margin-top:12px"></b></div></div>
+@@ -288,14 +322,14 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
+ </section>
+ </div></div>
+ <div id="toast" hidden></div>
+-<script src="/lib/cropper.js"></script>
++<script src="lib/cropper.js"></script>
++<script src="engine.js"></script>
+ <script>
+ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+ const fmtSize=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
+ const baseName=f=>f.name.replace(/\.[^.]+$/,'');
+ const extOf=f=>({jpeg:'jpg'}[f]||f);
+ function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,4500)}
+-async function post(url,file){const r=await fetch(url,{method:'POST',body:file});if(!r.ok){let m='Gagal memproses';try{m=(await r.json()).error}catch{}throw new Error(m)}return r.blob()}
+ function dz(drop,inputs,cb,multi){
+  ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.style.borderColor='#7b9bff'}));
+  ['dragleave','drop'].forEach(e=>drop.addEventListener(e,()=>drop.style.borderColor=''));
+@@ -368,7 +402,7 @@ async function runPhoto(){
+    bURL=URL.createObjectURL(await new Promise(r=>c.toBlob(r,'image/png')))}
+   const q=settings('p'),useCut=!!(P.cut&&$('#pRm').checked);if(useCut)q.delete('rmbg');
+   if(P.crop&&!useCut)Object.entries({cx:P.crop.x,cy:P.crop.y,cw:P.crop.width,ch:P.crop.height}).forEach(([k,v])=>q.set(k,v));
+-  const blob=await post('/api/image?'+q,useCut?P.cut:P.file);if(id!==P.seq)return;
++  const blob=await Engine.image(useCut?P.cut:P.file,q);if(id!==P.seq)return;
+   if(P.bURL)URL.revokeObjectURL(P.bURL);if(P.aURL)URL.revokeObjectURL(P.aURL);
+   P.bURL=bURL!==P.url?bURL:null;P.aURL=URL.createObjectURL(blob);
+   $('#bImg').src=bURL;$('#aImg').src=P.aURL;
+@@ -448,7 +482,7 @@ $('#aGo').onclick=async()=>{
+  const b=$('#aGo');b.disabled=true;b.textContent='Memproses…';au.pause();
+  try{
+   const dur=A.e-A.s,fmt=$('#aFmt').dataset.val,q=new URLSearchParams({start:A.s.toFixed(3),dur:dur.toFixed(3),br:A.br,fmt,vol:$('#aVol').value,fi:$('#aFi').value||0,fo:$('#aFo').value||0,mono:$('#aMono').checked?1:0});
+-  const blob=await post('/api/audio?'+q,A.file);
++  const blob=await Engine.audio(A.file,q);
+   if(A.outURL)URL.revokeObjectURL(A.outURL);A.outURL=URL.createObjectURL(blob);
+   $('#aOut').src=A.outURL;$('#aOutBox').hidden=false;
+   $('#aOutInfo').textContent=`· ${fmtSize(blob.size)} (${A.br} kbps, ${fmtTime(dur)}, volume ${(+$('#aVol').value).toFixed(2)}×)`;
+@@ -462,7 +496,7 @@ const vd=$('#vid'),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+ const V={file:null,dur:0,s:0,e:0,ok:false,drag:null,url:null,outURL:null,job:null,ac:null,res:null};
+ const VPRE={medsos:{res:'720',q:65,aud:'normal'},seimbang:{res:'1080',q:75,aud:'normal'},kecil:{res:'480',q:45,aud:'low'}};
+ const vCrf=()=>Math.round(18+(100-(+$('#vQ').value))*0.30);
+-fetch('/api/caps').then(r=>r.json()).then(c=>{$('#vCodecW').hidden=!c.h265}).catch(()=>{});
++Engine.caps().then(c=>{$('#vCodecW').hidden=!c.h265});
+ dz($('#vDrop'),[$('#vFile'),$('#vFile2')],loadVideo);
+ function loadVideo(f){
+  if(!(f.type.startsWith('video/')||/\.(mkv|mov|avi|webm|mp4|m4v|ts|3gp|flv|wmv)$/i.test(f.name)))return toast('File harus berupa video.');
+@@ -507,7 +541,7 @@ function vsync(){
+ }
+ function vph(){if(V.dur)$('#vPh').style.left=Math.min(100,vd.currentTime/V.dur*100)+'%'}
+ const vx=ev=>{const r=$('#vTl').getBoundingClientRect();return Math.min(V.dur,Math.max(0,(ev.clientX-r.left)/r.width*V.dur))};
+-$('#vTl').onpointerdown=ev=>{if(!V.dur)return;$('#vTl').setPointerCapture(ev.pointerId);const t=vx(ev),near=12/$('#vTl').clientWidth*V.dur,ds=Math.abs(t-V.s),de=Math.abs(t-V.e);
++$('#vTl').onpointerdown=ev=>{if(!V.dur)return;$('#vTl').setPointerCapture(ev.pointerId);const t=vx(ev),near=(matchMedia('(pointer:coarse)').matches?24:12)/$('#vTl').clientWidth*V.dur,ds=Math.abs(t-V.s),de=Math.abs(t-V.e);
+  V.drag=Math.min(ds,de)<near?(ds<=de?'s':'e'):'seek';if(V.drag==='seek'){vd.currentTime=t;vph()}};
+ $('#vTl').onpointermove=ev=>{if(!V.drag)return;const t=vx(ev);
+  if(V.drag==='s'){V.s=Math.min(t,V.e-.1);vd.currentTime=V.s}else if(V.drag==='e'){V.e=Math.max(t,V.s+.1);vd.currentTime=Math.max(0,V.e-.05)}else vd.currentTime=t;
+@@ -559,34 +593,25 @@ function vParams(){
+  return q;
+ }
+ function vBusy(on,t){$('#vProg').hidden=!on;$('#vGo').hidden=on;if(on){$('#vProgT').textContent=t||'Memproses…';$('#vProgBar').style.width='0'}$('#vDl').hidden=on||$('#vDl').hidden}
+-async function vCancelJob(){const id=V.job;V.job=null;if(V.ac){V.ac.abort();V.ac=null}if(id)fetch('/api/video/cancel?id='+id,{method:'POST'}).catch(()=>{});vBusy(false)}
++let vRun=0;
++async function vCancelJob(){vRun++;if(V.ac){V.ac.abort();V.ac=null}Engine.cancelVideo();vBusy(false)}
+ $('#vCancel').onclick=async()=>{await vCancelJob();toast('Proses dibatalkan.')};
+ $('#vGo').onclick=async()=>{
+- if(!V.file||V.job||V.ac)return;
++ if(!V.file||V.ac)return;
+  const fin=vLen()>0||!V.dur;if(!fin)return toast('Pilih bagian video yang valid dulu.');
+  if($('#vMode').dataset.val==='size'&&$('#vCmp').checked&&!(+$('#vT').value>0))return toast('Isi ukuran target (MB).');
+- vBusy(true,'Menyiapkan video…');const ac=V.ac=new AbortController();
++ vBusy(true,'Menyiapkan video…');const ac=V.ac=new AbortController(),my=++vRun;
+  try{
+-  const r=await fetch('/api/video?'+vParams(),{method:'POST',body:V.file,signal:ac.signal}),j=await r.json();if(!r.ok)throw new Error(j.error||'Gagal memproses video');
+-  const id=V.job=j.id;V.ac=null;
+-  for(;;){
+-   await sleep(600);if(V.job!==id)return;
+-   const st=await(await fetch('/api/video/status?id='+id)).json();if(st.error)throw new Error(st.error);
+-   if(st.state==='err')throw new Error(st.err||'Gagal memproses video');
+-   $('#vProgBar').style.width=st.pct+'%';$('#vProgT').textContent=(st.note?'Kompres ulang… ':'Memproses… ')+st.pct+'%';
+-   if(st.state==='done'){
+-    const blob=await(await fetch('/api/video/file?id='+id)).blob();if(V.job!==id)return;V.job=null;
+-    if(V.outURL)URL.revokeObjectURL(V.outURL);V.outURL=URL.createObjectURL(blob);
+-    $('#vOut').src=V.outURL;$('#vOutBox').hidden=false;
+-    const L=vLen(),part=V.dur&&L>0?V.file.size*L/V.dur:V.file.size,sv=(1-blob.size/part)*100;
+-    $('#vsN').textContent=fmtSize(blob.size);$('#vsS').textContent=(sv>=0?'-':'+')+Math.abs(sv).toFixed(0)+'%';$('#vsS').style.color=sv>=0?'#5ee08a':'#ff7a85';
+-    $('#vOutInfo').textContent='· '+fmtSize(blob.size)+(L>0?' · '+fmtTime(L):'');
+-    const dl=$('#vDl');dl.href=V.outURL;dl.download=`${baseName(V.file)}-rendzz.mp4`;vBusy(false);dl.hidden=false;$('#vGo').classList.remove('pri');$('#vGo').textContent='Proses ulang';
+-    if(st.note)toast2b(st.note);
+-    return;
+-   }
+-  }
+- }catch(e){if(e.name!=='AbortError')toast(e.message);V.job=null;V.ac=null;vBusy(false)}
++  const {blob,note}=await Engine.video(V.file,vParams(),{signal:ac.signal,onProgress:(p,n)=>{if(my!==vRun)return;$('#vProgBar').style.width=p+'%';$('#vProgT').textContent=(n?'Kompres ulang… ':'Memproses… ')+p+'%'}});
++  if(my!==vRun)return;V.ac=null;
++  if(V.outURL)URL.revokeObjectURL(V.outURL);V.outURL=URL.createObjectURL(blob);
++  $('#vOut').src=V.outURL;$('#vOutBox').hidden=false;
++  const L=vLen(),part=V.dur&&L>0?V.file.size*L/V.dur:V.file.size,sv=(1-blob.size/part)*100;
++  $('#vsN').textContent=fmtSize(blob.size);$('#vsS').textContent=(sv>=0?'-':'+')+Math.abs(sv).toFixed(0)+'%';$('#vsS').style.color=sv>=0?'#5ee08a':'#ff7a85';
++  $('#vOutInfo').textContent='· '+fmtSize(blob.size)+(L>0?' · '+fmtTime(L):'');
++  const dl=$('#vDl');dl.href=V.outURL;dl.download=`${baseName(V.file)}-rendzz.mp4`;vBusy(false);dl.hidden=false;$('#vGo').classList.remove('pri');$('#vGo').textContent='Proses ulang';
++  if(note)toast2b(note);
++ }catch(e){if(my===vRun){if(e.name!=='AbortError')toast(e.message);V.ac=null;vBusy(false)}}
+ };
+ 
+ /* ===== BATCH ===== */
+@@ -613,7 +638,7 @@ $('#bGo').onclick=async()=>{
+  B.items.forEach(i=>{if(i.url)URL.revokeObjectURL(i.url);i.blob=i.url=null;i.state='wait'});renderBatch();
+  for(const it of B.items){
+   it.state='run';renderBatch();
+-  try{it.blob=await post('/api/image?'+q,it.file);it.url=URL.createObjectURL(it.blob);
++  try{it.blob=await Engine.image(it.file,q);it.url=URL.createObjectURL(it.blob);
+    let n=baseName(it.file)+'-rendzz';used[n]=(used[n]||0)+1;if(used[n]>1)n+='-'+used[n];it.out=n+'.'+ext;it.state='ok'}
+   catch(e){it.state='err';it.err=e.message}
+   renderBatch();
+@@ -653,4 +678,4 @@ function toast2b(m){const t=$('#toast');t.style.background='#2f7d4f';toast(m);se
+ document.addEventListener('change',e=>{const m=(e.target.id||'').match(/^([pb])Rm$/);if(m)$('#'+m[1]+'RmO').hidden=!e.target.checked});
+ document.addEventListener('segchange',e=>{const m=(e.target.id||'').match(/^([pb])Bg$/);if(m)$('#'+m[1]+'Col').hidden=e.target.dataset.val!=='custom'});
+ </script>
+-<script src="/editor.js"></script></body></html>
+\ No newline at end of file
++<script src="editor.js"></script></body></html>
+\ No newline at end of file
+diff --git a/public/vendor/tailwind.js b/ui/vendor/tailwind.js
+similarity index 100%
+rename from public/vendor/tailwind.js
+rename to ui/vendor/tailwind.js
+diff --git a/web/README.md b/web/README.md
+new file mode 100644
+index 0000000..8e0740f
+--- /dev/null
++++ b/web/README.md
+@@ -0,0 +1,11 @@
++# Versi web / PWA (Tahap 2)
++
++Folder ini disiapkan untuk versi yang berjalan sepenuhnya di browser (Android, iPhone, PC) dan di-hosting di GitHub Pages.
++
++Tampilannya memakai folder `../ui` yang sama dengan versi desktop. Yang dibuat di sini hanya mesin pemrosesnya
++(`engine-web.js`), dengan antarmuka yang sama seperti `ui/engine.js`. Lihat `../docs/ENGINE.md`.
++
++Rencana isi:
++- `engine-web.js`: foto (canvas + codec WebAssembly), musik dan video (ffmpeg.wasm / WebCodecs), hapus background (model di browser)
++- `manifest.webmanifest` dan `sw.js`: agar bisa dipasang dan jalan offline
++- skrip build yang menyalin `../ui` ke folder `dist/` bersama library (cropperjs) lalu dideploy lewat GitHub Actions

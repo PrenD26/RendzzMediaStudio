@@ -5,8 +5,8 @@ let sharp = null, sharpErr = '';
 try { sharp = require('sharp'); } catch (e) { sharpErr = String(e.message).split('\n')[0]; }
 const ffmpeg = require('./ffmpeg-path')();
 process.chdir(__dirname);
-const PORT = +process.env.PORT || 3737, PUB = path.join(__dirname, 'public');
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css' };
+const PORT = +process.env.PORT || 3737, PUB = path.join(__dirname, '..', 'ui');
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.wasm': 'application/wasm' };
 const LIBS = { '/lib/cropper.js': 'cropperjs/dist/cropper.min.js', '/lib/cropper.css': 'cropperjs/dist/cropper.min.css' };
 
 const body = (req, max = 600e6) => new Promise((res, rej) => {

@@ -127,7 +127,7 @@ function diagnose(st, npmv) {
   if (st.ok && st.bg) warn('Fitur hapus background AI tidak aktif di PC ini (' + st.bg + ')' + (process.platform === 'win32' ? ' - biasanya teratasi dengan memasang Visual C++ Redistributable.' : '.'));
 
   // Tailwind lokal agar tetap jalan offline; diperbarui tiap 7 hari.
-  const tw = path.join(dir, 'public', 'vendor', 'tailwind.js');
+  const tw = path.join(dir, '..', 'ui', 'vendor', 'tailwind.js');
   const stale = !fs.existsSync(tw) || Date.now() - fs.statSync(tw).mtimeMs > 7 * 864e5;
   if (stale) try { log('Mengunduh Tailwind CSS...'); await download('https://cdn.tailwindcss.com/3.4.17', tw); } catch { log('Tailwind belum bisa diunduh' + (fs.existsSync(tw) ? ', memakai salinan lama.' : ' (akan dimuat dari CDN).')); }
 

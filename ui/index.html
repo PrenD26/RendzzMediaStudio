@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rendzz Media Studio</title>
-<link rel="stylesheet" href="/lib/cropper.css">
-<link rel="stylesheet" href="/editor.css">
-<script src="/vendor/tailwind.js" onerror="var s=document.createElement('script');s.src='https://cdn.tailwindcss.com';document.head.appendChild(s)"></script>
+<link rel="stylesheet" href="lib/cropper.css">
+<link rel="stylesheet" href="editor.css">
+<script src="vendor/tailwind.js" onerror="var s=document.createElement('script');s.src='https://cdn.tailwindcss.com';document.head.appendChild(s)"></script>
 <style>body{margin:0}*{box-sizing:border-box}
 .wall{width:1280px;height:800px;background:#0f1115;font:14px "Segoe UI Variable","Segoe UI",system-ui,sans-serif;color:#f2f4f8}
 .win{width:1280px;height:800px;overflow:hidden;background:#14171c;display:flex;flex-direction:column}
@@ -115,6 +115,40 @@ canvas{display:block;width:100%;height:176px;touch-action:none;cursor:crosshair}
 .pbar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}.pbar>div{height:100%;background:#7b9bff;width:0;transition:width .3s}
 .btn.mini{height:30px;padding:0 10px;font-size:12px;white-space:nowrap}
 kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);border-radius:4px;padding:1px 5px}
+
+/* v3.6 - tampilan HP/tablet sempit: menu di bawah, konten satu kolom, tombol aksi menempel di bawah layar */
+@media (max-width:860px){
+ .app{width:100%;height:100vh;height:100dvh;flex-direction:column}
+ .main{order:1;border-radius:0;border-left:0;min-height:0}
+ .side{order:2;flex:none;width:auto;flex-direction:row;gap:2px;padding:4px 6px calc(4px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1)}
+ .side .logo,.side .ok{display:none}
+ .nav{flex:1;flex-direction:column;justify-content:center;gap:3px;padding:8px 2px;font-size:11px;text-align:center;min-width:0}
+ .nav.on::before{left:30%;right:30%;top:0;bottom:auto;width:auto;height:3px}
+ .badge{position:absolute;top:2px;right:8px;margin:0;padding:0 5px;font-size:9px}
+ .top{height:auto;min-height:56px;padding:8px 14px;gap:8px}
+ .top>div{min-width:0}
+ .top h2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .pane .body{flex-direction:column;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+ .stage{flex:none;overflow:visible;padding:14px}
+ .insp{display:block;width:auto;flex:none;overflow:visible;border-left:0;border-top:1px solid rgba(255,255,255,.08);padding:16px}
+ .insp.split{display:contents}
+ .insp-b{flex:none;overflow:visible;padding:16px;border-top:1px solid rgba(255,255,255,.08);background:#101318}
+ .insp-f{position:sticky;bottom:0;z-index:6;padding:10px 14px 12px;box-shadow:0 -10px 24px rgba(0,0,0,.45)}
+ .insp:not(.split)>*+*{margin-top:16px}
+ .ed-actions{bottom:0!important;margin-left:-16px!important;margin-right:-16px!important;margin-bottom:-16px!important;padding-left:16px!important;padding-right:16px!important}
+ .photo{height:48vh;min-height:240px}
+ .cropwrap{height:46vh;min-height:240px}
+ .ed-view{height:46vh;min-height:240px}
+ .vwrap{height:34vh;min-height:170px}
+ .drop{min-height:220px;padding:20px}
+ #pMode,#edViewMode{width:100%!important}
+ .fields{flex-wrap:wrap}.fields .field{flex:1 1 140px}
+ .desk{display:none}
+ .tl{height:56px}.tl-h{width:20px;margin-left:-10px}.tl-h::after{left:9px}
+ .bars.mini{padding:8px 12px;gap:4px}
+ .btn{min-height:42px}
+ .btn.mini,.top .btn{min-height:34px}
+}
 </style></head>
 <body>
 <div class="app">
@@ -124,7 +158,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
  <button class="nav" data-tab="video"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg>Video<span class="badge">Baru</span></button>
  <button class="nav" data-tab="musik"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Musik</button>
  <button class="nav" data-tab="batch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h14v14"/></svg>Batch</button>
- <div class="ok">v3.5 · berjalan lokal</div>
+ <div class="ok">v3.6 · berjalan lokal</div>
 </nav>
 <div class="main">
 
@@ -187,11 +221,11 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
      <button id="vPlay" class="btn pri">▶ Putar potongan</button>
      <label class="row" style="gap:8px;justify-content:flex-start"><input id="vLoop" type="checkbox"> Ulangi</label>
      <div class="sp"></div><button id="vAll" class="btn sm">Pilih semua</button></div>
-    <div class="row" style="gap:12px;align-items:stretch">
+    <div class="row fields" style="gap:12px;align-items:stretch">
      <div class="field"><small>Mulai (detik)</small><div class="row" style="gap:8px;margin-top:4px"><input id="vS" type="number" step="0.01" min="0" class="fld"><button id="vSetS" class="btn mini" title="Pakai posisi putar sekarang (I)">Di sini</button></div></div>
      <div class="field"><small>Selesai (detik)</small><div class="row" style="gap:8px;margin-top:4px"><input id="vE" type="number" step="0.01" min="0" class="fld"><button id="vSetE" class="btn mini" title="Pakai posisi putar sekarang (O)">Di sini</button></div></div>
      <div class="field" style="flex:none;min-width:120px"><small>Durasi potongan</small><b id="vDur" style="display:block;margin-top:12px">-</b></div></div>
-    <p class="hint" style="margin-top:8px">Seret gagang putih untuk memilih bagian. Klik garis waktu untuk pindah posisi. Pintasan: <kbd>Spasi</kbd> putar · <kbd>I</kbd> mulai · <kbd>O</kbd> selesai · <kbd>←</kbd><kbd>→</kbd> geser 1 frame.</p>
+    <p class="hint" style="margin-top:8px">Seret gagang putih untuk memilih bagian. Klik garis waktu untuk pindah posisi.<span class="desk"> Pintasan: <kbd>Spasi</kbd> putar · <kbd>I</kbd> mulai · <kbd>O</kbd> selesai · <kbd>←</kbd><kbd>→</kbd> geser 1 frame.</span></p>
     <div id="vOutBox" class="bars" style="margin-top:14px" hidden><b>Hasil terakhir <span id="vOutInfo" class="sub" style="font-weight:400"></span></b><video id="vOut" controls playsinline style="width:100%;max-height:300px;background:#000;border-radius:8px"></video></div>
    </div>
   </div>
@@ -243,7 +277,7 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
      <button id="aPlay" class="btn pri">▶ Putar potongan</button>
      <label class="row" style="gap:8px;justify-content:flex-start"><input id="aLoop" type="checkbox"> Ulangi</label>
      <div class="sp"></div><button id="aAll" class="btn">Pilih semua</button></div>
-    <div class="row" style="gap:12px;margin-top:14px">
+    <div class="row fields" style="gap:12px;margin-top:14px">
      <div class="field"><small>Mulai (detik)</small><input id="aS" type="number" step="0.01" min="0" class="fld" style="margin-top:4px"></div>
      <div class="field"><small>Selesai (detik)</small><input id="aE" type="number" step="0.01" min="0" class="fld" style="margin-top:4px"></div>
      <div class="field"><small>Durasi potongan</small><b id="aDur" style="display:block;margin-top:12px"></b></div></div>
@@ -288,14 +322,14 @@ kbd{font:11px ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);bo
 </section>
 </div></div>
 <div id="toast" hidden></div>
-<script src="/lib/cropper.js"></script>
+<script src="lib/cropper.js"></script>
+<script src="engine.js"></script>
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const fmtSize=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
 const baseName=f=>f.name.replace(/\.[^.]+$/,'');
 const extOf=f=>({jpeg:'jpg'}[f]||f);
 function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,4500)}
-async function post(url,file){const r=await fetch(url,{method:'POST',body:file});if(!r.ok){let m='Gagal memproses';try{m=(await r.json()).error}catch{}throw new Error(m)}return r.blob()}
 function dz(drop,inputs,cb,multi){
  ['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.style.borderColor='#7b9bff'}));
  ['dragleave','drop'].forEach(e=>drop.addEventListener(e,()=>drop.style.borderColor=''));
@@ -368,7 +402,7 @@ async function runPhoto(){
    bURL=URL.createObjectURL(await new Promise(r=>c.toBlob(r,'image/png')))}
   const q=settings('p'),useCut=!!(P.cut&&$('#pRm').checked);if(useCut)q.delete('rmbg');
   if(P.crop&&!useCut)Object.entries({cx:P.crop.x,cy:P.crop.y,cw:P.crop.width,ch:P.crop.height}).forEach(([k,v])=>q.set(k,v));
-  const blob=await post('/api/image?'+q,useCut?P.cut:P.file);if(id!==P.seq)return;
+  const blob=await Engine.image(useCut?P.cut:P.file,q);if(id!==P.seq)return;
   if(P.bURL)URL.revokeObjectURL(P.bURL);if(P.aURL)URL.revokeObjectURL(P.aURL);
   P.bURL=bURL!==P.url?bURL:null;P.aURL=URL.createObjectURL(blob);
   $('#bImg').src=bURL;$('#aImg').src=P.aURL;
@@ -448,7 +482,7 @@ $('#aGo').onclick=async()=>{
  const b=$('#aGo');b.disabled=true;b.textContent='Memproses…';au.pause();
  try{
   const dur=A.e-A.s,fmt=$('#aFmt').dataset.val,q=new URLSearchParams({start:A.s.toFixed(3),dur:dur.toFixed(3),br:A.br,fmt,vol:$('#aVol').value,fi:$('#aFi').value||0,fo:$('#aFo').value||0,mono:$('#aMono').checked?1:0});
-  const blob=await post('/api/audio?'+q,A.file);
+  const blob=await Engine.audio(A.file,q);
   if(A.outURL)URL.revokeObjectURL(A.outURL);A.outURL=URL.createObjectURL(blob);
   $('#aOut').src=A.outURL;$('#aOutBox').hidden=false;
   $('#aOutInfo').textContent=`· ${fmtSize(blob.size)} (${A.br} kbps, ${fmtTime(dur)}, volume ${(+$('#aVol').value).toFixed(2)}×)`;
@@ -462,7 +496,7 @@ const vd=$('#vid'),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const V={file:null,dur:0,s:0,e:0,ok:false,drag:null,url:null,outURL:null,job:null,ac:null,res:null};
 const VPRE={medsos:{res:'720',q:65,aud:'normal'},seimbang:{res:'1080',q:75,aud:'normal'},kecil:{res:'480',q:45,aud:'low'}};
 const vCrf=()=>Math.round(18+(100-(+$('#vQ').value))*0.30);
-fetch('/api/caps').then(r=>r.json()).then(c=>{$('#vCodecW').hidden=!c.h265}).catch(()=>{});
+Engine.caps().then(c=>{$('#vCodecW').hidden=!c.h265});
 dz($('#vDrop'),[$('#vFile'),$('#vFile2')],loadVideo);
 function loadVideo(f){
  if(!(f.type.startsWith('video/')||/\.(mkv|mov|avi|webm|mp4|m4v|ts|3gp|flv|wmv)$/i.test(f.name)))return toast('File harus berupa video.');
@@ -507,7 +541,7 @@ function vsync(){
 }
 function vph(){if(V.dur)$('#vPh').style.left=Math.min(100,vd.currentTime/V.dur*100)+'%'}
 const vx=ev=>{const r=$('#vTl').getBoundingClientRect();return Math.min(V.dur,Math.max(0,(ev.clientX-r.left)/r.width*V.dur))};
-$('#vTl').onpointerdown=ev=>{if(!V.dur)return;$('#vTl').setPointerCapture(ev.pointerId);const t=vx(ev),near=12/$('#vTl').clientWidth*V.dur,ds=Math.abs(t-V.s),de=Math.abs(t-V.e);
+$('#vTl').onpointerdown=ev=>{if(!V.dur)return;$('#vTl').setPointerCapture(ev.pointerId);const t=vx(ev),near=(matchMedia('(pointer:coarse)').matches?24:12)/$('#vTl').clientWidth*V.dur,ds=Math.abs(t-V.s),de=Math.abs(t-V.e);
  V.drag=Math.min(ds,de)<near?(ds<=de?'s':'e'):'seek';if(V.drag==='seek'){vd.currentTime=t;vph()}};
 $('#vTl').onpointermove=ev=>{if(!V.drag)return;const t=vx(ev);
  if(V.drag==='s'){V.s=Math.min(t,V.e-.1);vd.currentTime=V.s}else if(V.drag==='e'){V.e=Math.max(t,V.s+.1);vd.currentTime=Math.max(0,V.e-.05)}else vd.currentTime=t;
@@ -559,34 +593,25 @@ function vParams(){
  return q;
 }
 function vBusy(on,t){$('#vProg').hidden=!on;$('#vGo').hidden=on;if(on){$('#vProgT').textContent=t||'Memproses…';$('#vProgBar').style.width='0'}$('#vDl').hidden=on||$('#vDl').hidden}
-async function vCancelJob(){const id=V.job;V.job=null;if(V.ac){V.ac.abort();V.ac=null}if(id)fetch('/api/video/cancel?id='+id,{method:'POST'}).catch(()=>{});vBusy(false)}
+let vRun=0;
+async function vCancelJob(){vRun++;if(V.ac){V.ac.abort();V.ac=null}Engine.cancelVideo();vBusy(false)}
 $('#vCancel').onclick=async()=>{await vCancelJob();toast('Proses dibatalkan.')};
 $('#vGo').onclick=async()=>{
- if(!V.file||V.job||V.ac)return;
+ if(!V.file||V.ac)return;
  const fin=vLen()>0||!V.dur;if(!fin)return toast('Pilih bagian video yang valid dulu.');
  if($('#vMode').dataset.val==='size'&&$('#vCmp').checked&&!(+$('#vT').value>0))return toast('Isi ukuran target (MB).');
- vBusy(true,'Menyiapkan video…');const ac=V.ac=new AbortController();
+ vBusy(true,'Menyiapkan video…');const ac=V.ac=new AbortController(),my=++vRun;
  try{
-  const r=await fetch('/api/video?'+vParams(),{method:'POST',body:V.file,signal:ac.signal}),j=await r.json();if(!r.ok)throw new Error(j.error||'Gagal memproses video');
-  const id=V.job=j.id;V.ac=null;
-  for(;;){
-   await sleep(600);if(V.job!==id)return;
-   const st=await(await fetch('/api/video/status?id='+id)).json();if(st.error)throw new Error(st.error);
-   if(st.state==='err')throw new Error(st.err||'Gagal memproses video');
-   $('#vProgBar').style.width=st.pct+'%';$('#vProgT').textContent=(st.note?'Kompres ulang… ':'Memproses… ')+st.pct+'%';
-   if(st.state==='done'){
-    const blob=await(await fetch('/api/video/file?id='+id)).blob();if(V.job!==id)return;V.job=null;
-    if(V.outURL)URL.revokeObjectURL(V.outURL);V.outURL=URL.createObjectURL(blob);
-    $('#vOut').src=V.outURL;$('#vOutBox').hidden=false;
-    const L=vLen(),part=V.dur&&L>0?V.file.size*L/V.dur:V.file.size,sv=(1-blob.size/part)*100;
-    $('#vsN').textContent=fmtSize(blob.size);$('#vsS').textContent=(sv>=0?'-':'+')+Math.abs(sv).toFixed(0)+'%';$('#vsS').style.color=sv>=0?'#5ee08a':'#ff7a85';
-    $('#vOutInfo').textContent='· '+fmtSize(blob.size)+(L>0?' · '+fmtTime(L):'');
-    const dl=$('#vDl');dl.href=V.outURL;dl.download=`${baseName(V.file)}-rendzz.mp4`;vBusy(false);dl.hidden=false;$('#vGo').classList.remove('pri');$('#vGo').textContent='Proses ulang';
-    if(st.note)toast2b(st.note);
-    return;
-   }
-  }
- }catch(e){if(e.name!=='AbortError')toast(e.message);V.job=null;V.ac=null;vBusy(false)}
+  const {blob,note}=await Engine.video(V.file,vParams(),{signal:ac.signal,onProgress:(p,n)=>{if(my!==vRun)return;$('#vProgBar').style.width=p+'%';$('#vProgT').textContent=(n?'Kompres ulang… ':'Memproses… ')+p+'%'}});
+  if(my!==vRun)return;V.ac=null;
+  if(V.outURL)URL.revokeObjectURL(V.outURL);V.outURL=URL.createObjectURL(blob);
+  $('#vOut').src=V.outURL;$('#vOutBox').hidden=false;
+  const L=vLen(),part=V.dur&&L>0?V.file.size*L/V.dur:V.file.size,sv=(1-blob.size/part)*100;
+  $('#vsN').textContent=fmtSize(blob.size);$('#vsS').textContent=(sv>=0?'-':'+')+Math.abs(sv).toFixed(0)+'%';$('#vsS').style.color=sv>=0?'#5ee08a':'#ff7a85';
+  $('#vOutInfo').textContent='· '+fmtSize(blob.size)+(L>0?' · '+fmtTime(L):'');
+  const dl=$('#vDl');dl.href=V.outURL;dl.download=`${baseName(V.file)}-rendzz.mp4`;vBusy(false);dl.hidden=false;$('#vGo').classList.remove('pri');$('#vGo').textContent='Proses ulang';
+  if(note)toast2b(note);
+ }catch(e){if(my===vRun){if(e.name!=='AbortError')toast(e.message);V.ac=null;vBusy(false)}}
 };
 
 /* ===== BATCH ===== */
@@ -613,7 +638,7 @@ $('#bGo').onclick=async()=>{
  B.items.forEach(i=>{if(i.url)URL.revokeObjectURL(i.url);i.blob=i.url=null;i.state='wait'});renderBatch();
  for(const it of B.items){
   it.state='run';renderBatch();
-  try{it.blob=await post('/api/image?'+q,it.file);it.url=URL.createObjectURL(it.blob);
+  try{it.blob=await Engine.image(it.file,q);it.url=URL.createObjectURL(it.blob);
    let n=baseName(it.file)+'-rendzz';used[n]=(used[n]||0)+1;if(used[n]>1)n+='-'+used[n];it.out=n+'.'+ext;it.state='ok'}
   catch(e){it.state='err';it.err=e.message}
   renderBatch();
@@ -653,4 +678,4 @@ function toast2b(m){const t=$('#toast');t.style.background='#2f7d4f';toast(m);se
 document.addEventListener('change',e=>{const m=(e.target.id||'').match(/^([pb])Rm$/);if(m)$('#'+m[1]+'RmO').hidden=!e.target.checked});
 document.addEventListener('segchange',e=>{const m=(e.target.id||'').match(/^([pb])Bg$/);if(m)$('#'+m[1]+'Col').hidden=e.target.dataset.val!=='custom'});
 </script>
-<script src="/editor.js"></script></body></html>
+<script src="editor.js"></script></body></html>

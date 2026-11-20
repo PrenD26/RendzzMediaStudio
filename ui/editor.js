@@ -243,7 +243,7 @@ async function runAI() {
   try {
     const q = new URLSearchParams({ model: $e('edModel').dataset.val }), k = P.crop;
     if (k) Object.entries({ cx: k.x, cy: k.y, cw: k.width, ch: k.height }).forEach(([a, v]) => q.set(a, v));
-    const blob = await post('/api/cutout?' + q, P.file), bmp = await createImageBitmap(blob);
+    const blob = await Engine.cutout(P.file, q), bmp = await createImageBitmap(blob);
     const c = document.createElement('canvas'); c.width = ED.W; c.height = ED.H; const x = c.getContext('2d', { willReadFrequently: true }); x.imageSmoothingQuality = 'high'; x.drawImage(bmp, 0, 0, ED.W, ED.H);
     const d = x.getImageData(0, 0, ED.W, ED.H).data, m = new Uint8Array(ED.W * ED.H); for (let i = 0; i < m.length; i++) m[i] = d[i * 4 + 3];
     cancelPick(); pushUndo(); ED.mask = m; invalidate(); toast2('Selesai. Rapikan sisa latar dengan Pipet warna atau kuas.');

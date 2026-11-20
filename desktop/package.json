@@ -1,6 +1,6 @@
 {
   "name": "rendzz-media-studio",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "Rendzz Media Studio - kompres & edit foto, video, dan musik secara lokal",
   "main": "start.js",
   "engines": { "node": ">=18.17" },

@@ -1,8 +1,8 @@
 # Rendzz Media Studio
 
-Kompres dan edit **foto, video, dan musik** langsung di komputermu. Tidak ada file yang diunggah ke internet.
+Kompres dan edit **foto, video, dan musik** langsung di perangkatmu. Tidak ada file yang diunggah ke internet.
 
-**Versi saat ini: 3.5**
+**Versi saat ini: 3.6**
 
 ## Fitur
 
@@ -13,32 +13,40 @@ Kompres dan edit **foto, video, dan musik** langsung di komputermu. Tidak ada fi
 | Musik | Potong, volume, fade in/out, mono, MP3/M4A/OGG dengan perkiraan ukuran |
 | Batch | Satu pengaturan untuk banyak foto, unduh sebagai ZIP |
 
-## Menjalankan
+Tampilan sudah responsif: di HP menu pindah ke bawah dan tombol aksi menempel di bawah layar.
+
+## Menjalankan versi desktop
 
 - **Windows:** klik dua kali `start.bat`
 - **Linux / Mac:** jalankan `./start.sh`
 
 Node.js, library, dan model AI dipasang otomatis pada run pertama (butuh internet). Setelah itu aplikasi berjalan offline.
-Detail dan pemecahan masalah ada di [PANDUAN.txt](PANDUAN.txt).
+Detail dan pemecahan masalah: [desktop/PANDUAN.txt](desktop/PANDUAN.txt).
 
 ## Struktur
 
 ```
-server.js        server lokal (sharp untuk foto, ffmpeg untuk video & musik)
-start.js         peluncur: cek Node, pasang library, uji, buka browser
-public/          tampilan (index.html, editor.js, editor.css)
-scripts/         pembantu untuk start.bat / start.sh
-docs/            catatan proyek
+ui/        tampilan bersama (index.html, editor.js, editor.css, engine.js)
+desktop/   server lokal + peluncur (sharp & ffmpeg untuk foto/video/musik)
+web/       versi browser/PWA untuk Android, iPhone, PC (dalam rencana)
+docs/      catatan proyek (antarmuka Engine, langkah GitHub)
 ```
+
+`ui/` tidak memanggil server secara langsung, hanya lewat objek `Engine` ([docs/ENGINE.md](docs/ENGINE.md)).
+Desktop memakai `ui/engine.js`; versi web nanti menyediakan `Engine` sendiri dengan antarmuka yang sama.
 
 ## Roadmap
 
-1. Naik ke GitHub (dokumen ini)
-2. Versi web/PWA yang jalan di browser, termasuk Android (hosting: GitHub Pages)
-3. Putuskan distribusi PC: `Rendzz.bat` satu file atau `.exe`
-4. Fitur lanjutan: batch video, ekstrak audio, GIF
+1. ~~Naik ke GitHub~~
+2. ~~Pisah `ui/` `desktop/` `web/`, lapisan Engine, tampilan HP~~ (v3.6)
+3. Versi web/PWA (Foto, lalu Musik, Video, hapus background), hosting GitHub Pages
+4. Putuskan distribusi PC: `Rendzz.bat` satu file atau `.exe`
+5. Fitur lanjutan: batch video, ekstrak audio, GIF
+
+Catatan teknis: `ui/vendor/tailwind.js` saat ini hanya dipakai untuk reset gaya dasar (tidak ada class utilitas Tailwind yang dipakai di tampilan).
+Di Tahap 3 sebaiknya diganti CSS hasil build agar versi web ringan dan bisa offline.
 
 ## Lisensi
 
-Belum ditentukan. Tambahkan file `LICENSE` sebelum repositori dibuat publik.
-Perlu dicek juga lisensi dependensi (mis. `ffmpeg-static`, `@imgly/background-removal-node`).
+[MIT](LICENSE). Dependensi memiliki lisensinya masing-masing (mis. `ffmpeg-static`, `sharp`, `@imgly/background-removal-node`);
+semuanya dipasang lewat npm saat run pertama dan tidak disalin ke repositori ini.
